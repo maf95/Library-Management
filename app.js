@@ -1,7 +1,9 @@
 const express = require("express");
+require("dotenv").config();
 const admin = require("./routes/admin");
 const path = require("path");
 const { static } = require("express");
+const db = require("./util/databaseconnection");
 
 const app = express();
 app.set("view engine", "ejs");

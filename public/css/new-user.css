@@ -45,8 +45,8 @@ body {
 
 .header {
     position: absolute;
-    top: calc(50% - 35px);
-    left: calc(50% - 355px);
+    top: calc(30% - 35px);
+    left: calc(25%);
     z-index: 2;
 }
 
@@ -55,47 +55,17 @@ body {
     color: #fff;
     font-family: 'Exo', sans-serif;
     font-size: 35px;
-    font-weight: 200;
+    font-weight: bold;
 }
 
 .header div span {
     color: #5379fa !important;
 }
 
-.welcome div {
-    font-size: 4rem;
-    font-weight: bold;
-}
-
-.login1 {
-    position: absolute;
-    top: 650px;
-    left: 1200px;
-    height: 150px;
-    width: 350px;
-    padding: 10px;
-    z-index: 2;
-}
-
-.btn {
-    width: 260px;
-    height: 35px;
-    background: #fff;
-    border: 1px solid #fff;
-    cursor: pointer;
-    border-radius: 2px;
-    color: #a59b8a;
-    font-family: 'Exo', sans-serif;
-    font-size: 16px;
-    font-weight: 400;
-    padding: 6px;
-    margin-top: 10px;
-}
-
 .login {
     position: absolute;
-    top: calc(50% - 75px);
-    left: calc(50% - 50px);
+    top: calc(30% - 35px);
+    left: calc(45%);
     height: 150px;
     width: 350px;
     padding: 10px;
@@ -144,6 +114,20 @@ body {
     margin-top: 10px;
 }
 
+.login input[type=radio] {
+    margin-top: 10px;
+    width: 24px;
+    height: 24px;
+    margin-right: 10px;
+}
+
+.login label {
+    font-family: 'Exo', sans-serif;
+    font-size: 16px;
+    font-weight: 400;
+    margin-right: 10px;
+}
+
 .login input[type=button],
 .btn1 {
     width: 260px;
@@ -167,14 +151,6 @@ body {
 
 .login input[type=button],
 .btn1:active {
-    opacity: 0.6;
-}
-
-.btn:hover {
-    opacity: 0.8;
-}
-
-.btn:active {
     opacity: 0.6;
 }
 

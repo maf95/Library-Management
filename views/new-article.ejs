@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>
+        <%=pageTitle%>
+    </title>
+    <link href="//maxcdn.bootstrapcdn.com/bootstrap/4.1.1/css/bootstrap.min.css" rel="stylesheet" id="bootstrap-css">
+    <script src="//maxcdn.bootstrapcdn.com/bootstrap/4.1.1/js/bootstrap.min.js"></script>
+    <script src="//cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+    <link rel="stylesheet" href="/css/style.css">
+    <link rel="stylesheet" href="/css/new-article.css">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
+    <script src="https://code.jquery.com/jquery-3.3.1.js"></script>
+
+</head>
+
+<body>
+    <div class="wrapper">
+        <header>
+            <nav>
+                <div class="menu-icon">
+                    <i class="fa fa-bars fa-2x"></i>
+                </div>
+                <div class="logo">
+                    UNIVERSITY LIBRARY
+                </div>
+                <div class="menu">
+                    <ul>
+                        <li><a href="#">Home</a></li>
+                        <li><a href="#">Update user</a></li>
+                        <li><a href="#">Display users</a></li>
+                        <li><a href="/">Logout</a></li>
+
+                    </ul>
+                </div>
+            </nav>
+        </header>
+        <div class="header">
+            <div>Add<span>new article</span></div>
+        </div>
+        <br>
+        <div class="login">
+            <input type="text" placeholder="title" name="title"><br>
+            <input type="text" placeholder="type" name="type"><br>
+            <input type="text" placeholder="author" name="author"><br>
+
+            <label for="description">Description</label><br>
+            <textarea name="description" id="" cols="28" rows="5"></textarea>
+            <form action="/admin" method="GET">
+                <button class="btn1" type="submit">Add article</button>
+            </form>
+        </div>
+        <div class="content">
+            <p>
+            </p>
+
+        </div>
+    </div>
+</body>
+<script>
+    $(document).ready(function() {
+        $(".menu-icon").on("click", function() {
+            $("nav ul").toggleClass("showing");
+        });
+    });
+
+    // Scrolling Effect
+
+    $(window).on("scroll", function() {
+        if ($(window).scrollTop()) {
+            $('nav').addClass('black');
+        } else {
+            $('nav').removeClass('black');
+        }
+    })
+</script>
+
+
+</html>

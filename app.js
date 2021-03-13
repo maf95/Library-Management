@@ -3,7 +3,7 @@ require("dotenv").config();
 const admin = require("./routes/admin");
 const path = require("path");
 const { static } = require("express");
-const db = require("./util/databaseconnection");
+const db = require("./util/databaseConnection");
 
 const app = express();
 app.set("view engine", "ejs");

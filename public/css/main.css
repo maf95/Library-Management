@@ -50,7 +50,17 @@ body {
     z-index: 2;
 }
 
-.header div {
+.header1 {
+    position: absolute;
+    top: calc(40% - 35px);
+    left: calc(50% - 355px);
+    font-size: 4rem;
+    font-weight: bold;
+    z-index: 2;
+}
+
+.header div,
+.header1 div {
     float: left;
     color: #fff;
     font-family: 'Exo', sans-serif;
@@ -58,13 +68,17 @@ body {
     font-weight: 200;
 }
 
-.header div span {
-    color: #5379fa !important;
-}
-
-.welcome div {
+.header1 div {
+    float: left;
+    color: #fff;
+    font-family: 'Exo', sans-serif;
     font-size: 4rem;
     font-weight: bold;
+}
+
+.header div span,
+.header1 div span {
+    color: #5379fa !important;
 }
 
 .login1 {

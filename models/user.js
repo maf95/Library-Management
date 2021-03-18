@@ -20,14 +20,11 @@ const userSchema = new Schema({
         type:String,
         required:true
     },
-    isAdmin:{
-        type:Boolean,
-        default:false  
+    role:{
+        type:String,
+        required:true  
     },
-    isLibrarian:{
-        type:Boolean,
-        defaultfalse
-    },
+    
     firstLogin:{
         type:Boolean,
         default:true

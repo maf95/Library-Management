@@ -12,6 +12,7 @@
     <script src="//maxcdn.bootstrapcdn.com/bootstrap/4.1.1/js/bootstrap.min.js"></script>
     <script src="//cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
     <link rel="stylesheet" href="/css/style.css">
+    <link rel="stylesheet" href="/css/card.css">
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
     <script src="https://code.jquery.com/jquery-3.3.1.js"></script>
 
@@ -31,20 +32,44 @@
                     <ul>
                         <li><a href="/new-user">Create user</a></li>
                         <li><a href="#">Update user</a></li>
-                        <li><a href="#">Display users</a></li>
+                        <li><a href="/sessions">Display users</a></li>
                         <li><a href="/">Logout</a></li>
 
                     </ul>
                 </div>
             </nav>
         </header>
-        <div class="content">
-            <p>
-                This page is accesible only for administrators. If, by mistake, you manage to get here and you are not an administrator it means that something wrong happened and you are strongly aadvised to quit this page and send an email to <span>contact@university.mail</span>                to let us know about this issue. Thank you!
-            </p>
+        <div class="welcome">
+            <div>Welcome<span><%=name%></span></div>
+        </div>
+        <div class="our-team">
+            <div>Our<span>Team</span></div>
+        </div>
+        <div class="container">
+            <% users.forEach(user=>{ %>
+                <div class="card" style="background-color: rgb(171, 164, 164);">
+                    <div class="bg-image hover-overlay ripple" data-mdb-ripple-color="light">
+                        <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcS5Nv9ABIbG874uoduwWiGydgOZzgY2Z0nuew&usqp=CAU" class="img-fluid" />
+                        <a href="#!">
+                            <div class="mask" style="background-color: rgba(251, 251, 251, 0.15)"></div>
+                        </a>
+                    </div>
+                    <div class="card-body">
+                        <h5 class="card-title">
+                            <%=user.name%>
+                        </h5>
+                        <p class="card-text">
+                            <%=user.role%>
+                        </p>
+                        <a href="#!" class="btn btn-primary">Details</a>
+                    </div>
+                </div>
+                <% }) %>
+
+
 
         </div>
-    </div>
+
 </body>
 <script>
     $(document).ready(function() {

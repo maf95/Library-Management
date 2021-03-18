@@ -10,6 +10,58 @@ body {
     font-weight: lighter;
 }
 
+.card {
+    width: 230px;
+    height: 370px;
+}
+
+.container {
+    position: absolute;
+    top: 250px;
+    left: 170px;
+    width: 90%;
+    height: 100%;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-around;
+    align-items: stretch;
+}
+
+.welcome {
+    position: absolute;
+    top: 100px;
+    left: 50px;
+    z-index: 2;
+}
+
+.our-team {
+    position: absolute;
+    top: 150px;
+    left: 650px;
+    z-index: 2;
+}
+
+.welcome div {
+    float: left;
+    color: #fff;
+    font-family: 'Exo', sans-serif;
+    font-size: 2rem;
+    font-weight: 200;
+}
+
+.our-team div {
+    float: left;
+    color: #fff;
+    font-family: 'Exo', sans-serif;
+    font-size: 3rem;
+    font-weight: 300;
+}
+
+.welcome div span,
+.our-team span {
+    color: #5379fa !important;
+}
+
 header {
     width: 100%;
     height: 100vh;

@@ -4,33 +4,33 @@ const session = require('express-session');
 const User = require('../models/user')
 
 exports.getIndex = (req, res, next) => {
-    res.render("index", { pageTitle: "Welcome to Library" });
+    res.render("users/index", { pageTitle: "Welcome to Library" });
 };
 
 exports.getLogin = (req,res,next)=>{
-    res.render('login',{pageTitle:"Login"})
+    res.render('users/login',{pageTitle:"Login"})
 }
 
 exports.getAdmin = async (req,res,next)=>{
     const users = await User.find();
         
-    res.render('admin',{pageTitle:"Admin's page",name:req.session.user.name,users:users})
+    res.render('users/admin',{pageTitle:"Admin's page",name:req.session.user.name,users:users})
 }
 
 exports.getLibrarian=(req,res,next)=>{
-    res.render('librarian',{pageTitle:"Librarian's page"})
+    res.render('users/librarian',{pageTitle:"Librarian's page"})
 }
 
 exports.getNewUser = (req,res,next)=>{
-    res.render('new-user',{pageTitle:'Add new user'})
+    res.render('users/new-user',{pageTitle:'Add new user'})
 }
 
 exports.getNewArticle=(req,res,next)=>{
-    res.render('new-article',{pageTitle:'Add new article'})
+    res.render('articles/new-article',{pageTitle:'Add new article'})
 }
 
 exports.getChangePassword=(req,res,next)=>{
-    res.render('change-password',{pageTitle:"Change Password"})
+    res.render('users/change-password',{pageTitle:"Change Password"})
 }
 
 exports.postNewUser=async (req,res,next)=>{
@@ -39,7 +39,7 @@ exports.postNewUser=async (req,res,next)=>{
     const user = new User({
         userName: req.body.username,
         name:req.body.name,
-        email:req.body.email,
+        
         password:hashedPw,
         role:req.body.position 
     })
@@ -66,10 +66,12 @@ exports.postLogin=async (req,res,next)=>{
          
      }
      req.session.user=user;
+     req.session.isLoggedIn=true;
      console.log(req.session.user)
     if(user.firstLogin){
         return res.redirect('/change-password')
     }
+   
     if(user.role==='admin'){
         return res.redirect('/admin')
     }
@@ -117,6 +119,12 @@ exports.postChangePassword = async (req,res,next)=>{
         next(error)
     }    
     
+}
+
+exports.postLogout=(req,res,next)=>{
+    req.session.destroy(()=>{
+        res.redirect('/')
+    })
 }
 
 

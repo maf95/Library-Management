@@ -128,6 +128,19 @@ nav ul li a {
     font-size: 24px;
 }
 
+nav ul li button {
+    border: none;
+    background-color: transparent;
+    color: rgb(209, 209, 214);
+    font-size: 24px;
+}
+
+nav ul li button:hover {
+    cursor: pointer;
+    color: #4061ca !important;
+    text-decoration: underline;
+}
+
 .menu-icon {
     line-height: 60px;
     width: 100%;

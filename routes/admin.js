@@ -28,7 +28,33 @@ router.get(
 
 router.get("/new-user", routeProtection.isAdmin, adminController.getNewUser);
 
-router.post("/new-user", routeProtection.isAdmin, adminController.postNewUser);
+router.post(
+    "/new-user", [
+        check("name").custom((value) => {
+            const regEx = /^[a-z]*$/;
+            const words = value.split(" ");
+            const name = words.reduce((s, w) => s + w, "").toLowerCase();
+            if (name.match(regEx)) {
+                return true;
+            }
+            throw "Name should only contains letters!";
+        }),
+        check("username").custom((value) => {
+            return User.findOne({ userName: value }).then((user) => {
+                if (user) {
+                    return Promise.reject(
+                        "Username alrready in use. Pick a different one!"
+                    );
+                }
+            });
+        }),
+        check("password")
+        .isLength({ min: 1 })
+        .withMessage("Password field cannot be empty!"),
+    ],
+    routeProtection.isAdmin,
+    adminController.postNewUser
+);
 
 router.get("/new-article", adminController.getNewArticle);
 

@@ -57,7 +57,11 @@ exports.getLibrarian = (req, res, next) => {
 };
 
 exports.getNewUser = (req, res, next) => {
-    res.render("users/new-user", { pageTitle: "Add new user" });
+    res.render("users/new-user", {
+        pageTitle: "Add new user",
+        errorMessage: "",
+        oldValue: {},
+    });
 };
 
 exports.getUpdateUser = async(req, res, next) => {
@@ -76,7 +80,7 @@ exports.getUpdateUser = async(req, res, next) => {
 
 exports.postUpdateUser = async(req, res, next) => {
     const errors = validationResult(req);
-    console.log(errors.array());
+
     if (!errors.isEmpty()) {
         const errorMessage = errors.array()[0].msg;
         return res.render("users/update-user", {
@@ -128,6 +132,19 @@ exports.getChangePassword = (req, res, next) => {
 };
 
 exports.postNewUser = async(req, res, next) => {
+    const errors = validationResult(req);
+    if (!errors.isEmpty()) {
+        const error = errors.array()[0].msg;
+        return res.render("users/new-user", {
+            pageTitle: "Add new user",
+            errorMessage: error,
+            oldValue: {
+                name: req.body.name,
+                userName: req.body.username,
+                password: req.body.password,
+            },
+        });
+    }
     try {
         const hashedPw = await bcrypt.hash(req.body.password, 12);
         const user = new User({
@@ -153,17 +170,23 @@ exports.postLogin = async(req, res, next) => {
         if (!user) {
             req.flash("error", "Incorrect username");
             req.flash("user", req.body.user);
+            console.log("from not user");
             return res.redirect("/authenticate");
         }
         const match = await bcrypt.compare(req.body.password, user.password);
         if (!match) {
+            console.log("from not match");
             req.flash("error", "Wrong password!");
             req.flash("pass", req.body.password);
             req.flash("user", req.body.user);
             return res.redirect("/authenticate");
         }
+
         req.session.user = user;
         req.session.isLoggedIn = true;
+        req.session.save((err) => {
+            console.log(err);
+        });
 
         if (user.firstLogin) {
             req.flash("succes", "At first logn you are required to chamge password!");
@@ -178,6 +201,7 @@ exports.postLogin = async(req, res, next) => {
             req.flash("succes", "Successfully login as librarian!");
             return res.redirect("/librarian");
         }
+
         const error = new Error("Unknown error in authentication");
         throw error;
     } catch (error) {

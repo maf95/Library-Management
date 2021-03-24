@@ -45,16 +45,21 @@
         </div>
         <br>
         <div class="login">
-            <form action="/new-user" method="POST">
-                <input type="text" placeholder="name" name="name"><br>
-                <input type="text" placeholder="username" name="username"><br>
-                <input type="password" placeholder="password" name="password"><br>
-                <label for="check-admin">Administrator</label>
-                <input type="radio" id="check-admin" name="position" value="admin">
-                <label for="check-librarian">Librarian</label>
-                <input type="radio" id="check-librarian" name="position" value="librarian">
-                <button class="btn1" type="submit">Create user</button>
-            </form>
+            <% if(errorMessage!=='') { %>
+                <div style="color: red; font-size: 20px;">
+                    <%=errorMessage%>
+                </div>
+                <% } %>
+                    <form action="/new-user" method="POST">
+                        <input type="text" placeholder="name" name="name" value="<%=oldValue.name%>"><br>
+                        <input type="text" placeholder="username" name="username" value="<%=oldValue.userName%>"><br>
+                        <input type="password" placeholder="password" name="password" value="<%=oldValue.password%>"><br>
+                        <label for="check-admin">Administrator</label>
+                        <input type="radio" id="check-admin" name="position" value="admin">
+                        <label for="check-librarian">Librarian</label>
+                        <input type="radio" id="check-librarian" name="position" value="librarian">
+                        <button class="btn1" type="submit">Create user</button>
+                    </form>
         </div>
 
     </div>

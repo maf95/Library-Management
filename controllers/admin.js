@@ -1,130 +1,227 @@
-const bcrypt = require('bcryptjs');
+const bcrypt = require("bcryptjs");
 //const { parse } = require('dotenv/types');
-const session = require('express-session');
-const User = require('../models/user')
+const session = require("express-session");
+const mongoose = require("mongoose");
+const User = require("../models/user");
+const { validationResult } = require("express-validator");
 
 exports.getIndex = (req, res, next) => {
     res.render("users/index", { pageTitle: "Welcome to Library" });
 };
 
-exports.getLogin = (req,res,next)=>{
-    res.render('users/login',{pageTitle:"Login"})
-}
+exports.getLogin = (req, res, next) => {
+    const errors = req.flash("error");
+    const userName = req.flash("user")[0] || "";
+    const pass = req.flash("pass")[0] || "";
+    let error = "";
+    if (errors.length > 0) {
+        error = errors[0];
+    }
+    res.render("users/login", {
+        pageTitle: "Login",
+        error: error,
+        user: userName,
+        pass: pass,
+    });
+};
 
-exports.getAdmin = async (req,res,next)=>{
-    const users = await User.find();
-        
-    res.render('users/admin',{pageTitle:"Admin's page",name:req.session.user.name,users:users})
-}
+exports.getAdmin = async(req, res, next) => {
+    const page = +req.query.page || 1;
+    const totalUsers = await User.find().countDocuments();
+    const users = await User.find()
+        .skip((page - 1) * 3)
+        .limit(3);
+    const userId = req.session.user._id;
+    console.log(req.flash("succes"));
 
-exports.getLibrarian=(req,res,next)=>{
-    res.render('users/librarian',{pageTitle:"Librarian's page"})
-}
+    res.render("users/admin", {
+        pageTitle: "Admin's page",
+        name: req.session.user.name,
+        users: users,
+        userId: userId,
+        hasPrevious: page > 1,
+        page: page,
+        nextPage: page + 1,
+        previousPage: page - 1,
+        totalPage: Math.ceil(totalUsers / 3),
+    });
+};
 
-exports.getNewUser = (req,res,next)=>{
-    res.render('users/new-user',{pageTitle:'Add new user'})
-}
+exports.getLibrarian = (req, res, next) => {
+    console.log(req.flash("succes"));
+    res.render("users/librarian", {
+        pageTitle: "Librarian's page",
+        userId: req.session.user._id,
+        succes: req.flash("succes"),
+    });
+};
 
-exports.getNewArticle=(req,res,next)=>{
-    res.render('articles/new-article',{pageTitle:'Add new article'})
-}
+exports.getNewUser = (req, res, next) => {
+    res.render("users/new-user", { pageTitle: "Add new user" });
+};
 
-exports.getChangePassword=(req,res,next)=>{
-    res.render('users/change-password',{pageTitle:"Change Password"})
-}
+exports.getUpdateUser = async(req, res, next) => {
+    const userId = req.params.userId;
+    try {
+        const user = await User.findById(userId);
+        res.render("users/update-user", {
+            pageTitle: "Update your data",
+            user: user,
+            errorMessage: "",
+        });
+    } catch (err) {
+        console.log(err);
+    }
+};
 
-exports.postNewUser=async (req,res,next)=>{
-    try{
-    const hashedPw = await bcrypt.hash(req.body.password,12);
-    const user = new User({
-        userName: req.body.username,
-        name:req.body.name,
-        
-        password:hashedPw,
-        role:req.body.position 
-    })
-    await user.save();
-    console.log("User created")
-    res.redirect('/admin')
-    } catch(err){
+exports.postUpdateUser = async(req, res, next) => {
+    const errors = validationResult(req);
+    console.log(errors.array());
+    if (!errors.isEmpty()) {
+        const errorMessage = errors.array()[0].msg;
+        return res.render("users/update-user", {
+            pageTitle: "Update your data",
+            user: {
+                userName: req.body.user,
+                name: req.body.name,
+                email: req.body.email,
+                mobilePhone: req.body.mobilePhone,
+                officePhone: req.body.officePhone,
+            },
+            errorMessage: errorMessage,
+        });
+    }
+    const userId = req.session.user._id;
+    const userName = req.body.user;
+    const name = req.body.name;
+    const email = req.body.email;
+    const mobilePhone = req.body.mobilePhone;
+    const officePhone = req.body.officePhone;
+    try {
+        const user = await User.findByIdAndUpdate(
+            userId, {
+                userName: userName,
+                name: name,
+                email: email,
+                mobilePhone: mobilePhone,
+                officePhone: officePhone,
+            }, { new: true }
+        );
+        req.session.user = user;
+        if (req.session.user.role === "admin") {
+            res.redirect("/admin");
+        } else {
+            res.redirect("/librarian");
+        }
+    } catch (err) {
+        console.log(err);
+    }
+};
+
+exports.getNewArticle = (req, res, next) => {
+    res.render("articles/new-article", { pageTitle: "Add new article" });
+};
+
+exports.getChangePassword = (req, res, next) => {
+    console.log(req.flash("succes"));
+    res.render("users/change-password", { pageTitle: "Change Password" });
+};
+
+exports.postNewUser = async(req, res, next) => {
+    try {
+        const hashedPw = await bcrypt.hash(req.body.password, 12);
+        const user = new User({
+            userName: req.body.username,
+            name: req.body.name,
+
+            password: hashedPw,
+            role: req.body.position,
+        });
+        await user.save();
+        console.log("User created");
+        res.redirect("/admin");
+    } catch (err) {
         //handle errors
-        console.log(err)
-    }    
-}
+        console.log(err);
+    }
+};
 
-exports.postLogin=async (req,res,next)=>{
-    try{
-        const user = await User.findOne({userName:req.body.user})
-        
-    if(!user){
-        return res.redirect('/authenticate')
-        
-    }
-    const match =await bcrypt.compare(req.body.password, user.password)
-    if(!match){
-       return res.redirect('/authenticate')
-         
-     }
-     req.session.user=user;
-     req.session.isLoggedIn=true;
-     console.log(req.session.user)
-    if(user.firstLogin){
-        return res.redirect('/change-password')
-    }
-   
-    if(user.role==='admin'){
-        return res.redirect('/admin')
-    }
-    if(user.role==='librarian'){
-        return res.redirect('/librarian')
-    }
-    const error = new Error("Unknown error in authentication")
-    throw error
-    } catch(error){
-        if(!error.statusCode){
-            error.statusCode=500
+exports.postLogin = async(req, res, next) => {
+    try {
+        const user = await User.findOne({ userName: req.body.user });
+
+        if (!user) {
+            req.flash("error", "Incorrect username");
+            req.flash("user", req.body.user);
+            return res.redirect("/authenticate");
         }
-        next(error)
-    }    
-}
-
-exports.postChangePassword = async (req,res,next)=>{
-    try{
-        const user = await User.findOne({userName : req.body.user})
-    if(!user){
-        return res.redirect('/change-password')
-    }
-    const match = await bcrypt.compare(req.body.password, user.password)
-    if(!match){
-        return res.redirect('/change-password')
-    }
-    if(req.body.passwordNew !==req.body.passwordConfirm){
-        return res.redirect('/change-password')
-    }
-    const hashedPw= await bcrypt.hash(req.body.passwordNew,12)
-    await User.findOneAndUpdate({userName:req.body.user},{password:hashedPw, firstLogin:false})
-    if(user.role==='admin'){
-        return res.redirect('/admin')
-    }
-    if(user.role==='librarian'){
-        return res.redirect('/librarian')
-
-    }
-    const error = new Error("Unknown error during changing password")
-    throw error;
-    }catch(error){
-        if(!error.statusCode){
-            error.statusCode=500
+        const match = await bcrypt.compare(req.body.password, user.password);
+        if (!match) {
+            req.flash("error", "Wrong password!");
+            req.flash("pass", req.body.password);
+            req.flash("user", req.body.user);
+            return res.redirect("/authenticate");
         }
-        next(error)
-    }    
-    
-}
+        req.session.user = user;
+        req.session.isLoggedIn = true;
 
-exports.postLogout=(req,res,next)=>{
-    req.session.destroy(()=>{
-        res.redirect('/')
-    })
-}
+        if (user.firstLogin) {
+            req.flash("succes", "At first logn you are required to chamge password!");
+            return res.redirect("/change-password");
+        }
 
+        if (user.role === "admin") {
+            req.flash("succes", "Successfully login as administrator!");
+            return res.redirect("/admin");
+        }
+        if (user.role === "librarian") {
+            req.flash("succes", "Successfully login as librarian!");
+            return res.redirect("/librarian");
+        }
+        const error = new Error("Unknown error in authentication");
+        throw error;
+    } catch (error) {
+        if (!error.statusCode) {
+            error.statusCode = 500;
+        }
+        next(error);
+    }
+};
 
+exports.postChangePassword = async(req, res, next) => {
+    try {
+        const user = await User.findOne({ userName: req.body.user });
+        if (!user) {
+            return res.redirect("/change-password");
+        }
+        const match = await bcrypt.compare(req.body.password, user.password);
+        if (!match) {
+            return res.redirect("/change-password");
+        }
+        if (req.body.passwordNew !== req.body.passwordConfirm) {
+            return res.redirect("/change-password");
+        }
+        const hashedPw = await bcrypt.hash(req.body.passwordNew, 12);
+        const newUser = await User.findOneAndUpdate({ userName: req.body.user }, { password: hashedPw, firstLogin: false }, { new: true });
+        req.session.user = newUser;
+        if (user.role === "admin") {
+            return res.redirect("/admin");
+        }
+        if (user.role === "librarian") {
+            return res.redirect("/librarian");
+        }
+        const error = new Error("Unknown error during changing password");
+        throw error;
+    } catch (error) {
+        if (!error.statusCode) {
+            error.statusCode = 500;
+        }
+        next(error);
+    }
+};
+
+exports.postLogout = (req, res, next) => {
+    req.session.destroy(() => {
+        res.redirect("/");
+    });
+};

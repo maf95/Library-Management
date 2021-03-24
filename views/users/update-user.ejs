@@ -15,24 +15,30 @@
     <div class="body"></div>
     <div class="grad"></div>
     <div class="header">
-        <div>Change<span>Password</span></div>
+        <div>Update<span>your data</span></div>
     </div>
 
     <br>
     <div class="login">
-        <form action="/update-user" method="POST">
-            <input type="text" placeholder="username" name="user"><br>
-            <input type="text" placeholder="name" name="name"><br>
-            <input type="text" placeholder="mobile phone" name="mobilePhone"><br>
-            <input type="text" placeholder="office phone" name="officePhone"><br>
+        <% if(errorMessage!=='') { %>
+            <div style="color: red; font-size: 20px;">
+                <%=errorMessage%>
+            </div>
+            <% } %>
+                <form action="/update-user" method="POST">
+                    <input type="text" placeholder="username" name="user" value="<%=user.userName%>"><br>
+                    <input type="text" placeholder="name" name="name" value="<%=user.name%>"><br>
+                    <input type="email" placeholder="email" name="email" value="<%=user.email%>"><br>
+                    <input type="text" placeholder="mobile phone" name="mobilePhone" value="<%=user.mobilePhone%>"><br>
+                    <input type="text" placeholder="office phone" name="officePhone" value="<%=user.officePhone%>"><br>
 
 
-            <button class="btn1" type="submit">Change password</button>
-        </form>
+                    <button class="btn1" type="submit">Update information</button>
+                </form>
     </div>
 
     <div class="login1">
-        <form action="/" method="GET">
+        <form action="<%=user.role === 'admin' ? '/admin' : '/librarian' %>" method="GET">
             <button class="btn" type="submit">Exit</button>
         </form>
     </div>

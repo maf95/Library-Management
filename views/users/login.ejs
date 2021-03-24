@@ -23,11 +23,16 @@
 
     <br>
     <div class="login">
-        <form action="/authenticate" method="POST">
-            <input type="text" placeholder="username" name="user"><br>
-            <input type="password" placeholder="password" name="password"><br>
-            <button class="btn1" type="submit">Authenticate</button>
-        </form>
+        <% if(error!=='') { %>
+            <div style="color: red; font-size: 20px;">
+                <%=error%>
+            </div>
+            <% } %>
+                <form action="/authenticate" method="POST">
+                    <input type="text" placeholder="username" name="user" value="<%=user%>"><br>
+                    <input type="password" placeholder="password" name="password" value="<%=pass%>"><br>
+                    <button class="btn1" type="submit">Authenticate</button>
+                </form>
     </div>
     <div class="login1">
         <form action="/" method="GET">

@@ -12,15 +12,17 @@
     <script src="//maxcdn.bootstrapcdn.com/bootstrap/4.1.1/js/bootstrap.min.js"></script>
     <script src="//cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
     <link rel="stylesheet" href="/css/style.css">
+    <link rel="stylesheet" href="/css/main.css">
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
     <script src="https://code.jquery.com/jquery-3.3.1.js"></script>
 
 </head>
 
 <body>
+
     <div class="wrapper">
         <header>
-            <nav>
+            <nav class="top">
                 <div class="menu-icon">
                     <i class="fa fa-bars fa-2x"></i>
                 </div>
@@ -31,27 +33,29 @@
                     <ul>
                         <li><a href="/new-article">Add item</a></li>
                         <li><a href="#">Add from file</a></li>
-                        <li><a href="#">Display items</a></li>
-                        <li><a href="/logout">Logout</a></li>
+                        <li><a href="/update-user/<%=userId%>">Update your data</a></li>
+                        <li>
+                            <form action="/logout" method="POST">
+                                <button type="submit">Logout</button>
+                            </form>
+                        </li>
 
                     </ul>
                 </div>
             </nav>
         </header>
-        <div class="content">
-            <p>
-                This page is accesible only for librarians. If, by mistake, you manage to get here and you are not an administrator it means that something wrong happened and you are strongly aadvised to quit this page and send an email to <span>contact@university.mail</span>                to let us know about this issue. Thank you!
-            </p>
 
-        </div>
     </div>
+    <div>aaaa</div>
 </body>
+
 <script>
     $(document).ready(function() {
         $(".menu-icon").on("click", function() {
             $("nav ul").toggleClass("showing");
         });
     });
+
 
     // Scrolling Effect
 

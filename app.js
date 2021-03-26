@@ -1,6 +1,7 @@
 const express = require("express");
 require("dotenv").config();
 const admin = require("./routes/admin");
+const errorController = require("./controllers/errors");
 const path = require("path");
 const { static } = require("express");
 const db = require("./util/databaseConnection");
@@ -39,5 +40,16 @@ app.use(
 app.use(flash());
 
 app.use(admin);
+app.use(errorController.get404);
+
+app.use((error, req, res, next) => {
+    res
+        .status(500)
+        .render("error/500", {
+            pageTitle: "Error!",
+            error: error,
+            role: req.session.user.role,
+        });
+});
 
 app.listen(3000, console.log("Server started on port 3000"));

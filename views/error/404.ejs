@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="/css/main.css">
+    <title>
+        <%=pageTitle%>
+    </title>
+</head>
+
+<body>
+    <div class="body"></div>
+    <div class="grad"></div>
+    <div class="header1">
+        <div>Error 404!!!<span> Page not found!</span></div>
+
+    </div>
+    <br>
+    <div class="login1">
+        <form action="<%= role==='admin' ? '/admin': role==='librarian'?'/librarian':'/'%>" method="GET">
+            <button class="btn" type="submit">Back</button>
+        </form>
+
+    </div>
+</body>
+
+</html>

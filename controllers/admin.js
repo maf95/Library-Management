@@ -68,13 +68,16 @@ exports.getUpdateUser = async(req, res, next) => {
     const userId = req.params.userId;
     try {
         const user = await User.findById(userId);
+
         res.render("users/update-user", {
             pageTitle: "Update your data",
             user: user,
             errorMessage: "",
         });
     } catch (err) {
-        console.log(err);
+        const error = new Error(err);
+        error.httpStatusCode = 500;
+        next(error);
     }
 };
 
@@ -118,7 +121,9 @@ exports.postUpdateUser = async(req, res, next) => {
             res.redirect("/librarian");
         }
     } catch (err) {
-        console.log(err);
+        const error = new Error(err);
+        error.httpStatusCode = 500;
+        next(error);
     }
 };
 
@@ -158,8 +163,9 @@ exports.postNewUser = async(req, res, next) => {
         console.log("User created");
         res.redirect("/admin");
     } catch (err) {
-        //handle errors
-        console.log(err);
+        const error = new Error(err);
+        error.httpStatusCode = 500;
+        next(error);
     }
 };
 
@@ -204,10 +210,9 @@ exports.postLogin = async(req, res, next) => {
 
         const error = new Error("Unknown error in authentication");
         throw error;
-    } catch (error) {
-        if (!error.statusCode) {
-            error.statusCode = 500;
-        }
+    } catch (err) {
+        const error = new Error(err);
+        error.httpStatusCode = 500;
         next(error);
     }
 };
@@ -236,10 +241,9 @@ exports.postChangePassword = async(req, res, next) => {
         }
         const error = new Error("Unknown error during changing password");
         throw error;
-    } catch (error) {
-        if (!error.statusCode) {
-            error.statusCode = 500;
-        }
+    } catch (err) {
+        const error = new Error(err);
+        error.httpStatusCode = 500;
         next(error);
     }
 };

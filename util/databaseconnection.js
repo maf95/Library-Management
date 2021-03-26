@@ -13,7 +13,7 @@ const connectionOptions = {
 mongoose.connect(dbURI, connectionOptions);
 
 mongoose.connection.on("connected", () => {
-    console.log("Mongoose conected on Library database");
+    console.log("Mongoose connected on Library database");
 });
 
 mongoose.connection.on("err", () => {

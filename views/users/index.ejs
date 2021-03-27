@@ -21,6 +21,7 @@
     <br>
     <div class="login1">
         <form action="/authenticate" method="GET">
+            <input type="hidden" name="_csrf" value="<%=csrfToken%>">
             <button class="btn" type="submit">Authenticate</button>
         </form>
         <a href="/authenticate">Authenticate</a>

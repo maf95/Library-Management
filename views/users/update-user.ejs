@@ -26,6 +26,7 @@
             </div>
             <% } %>
                 <form action="/update-user" method="POST">
+                    <input type="hidden" name="_csrf" value="<%=csrfToken%>">
                     <input type="text" placeholder="username" name="user" value="<%=user.userName%>"><br>
                     <input type="text" placeholder="name" name="name" value="<%=user.name%>"><br>
                     <input type="email" placeholder="email" name="email" value="<%=user.email%>"><br>

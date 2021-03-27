@@ -51,6 +51,7 @@
             <label for="description">Description</label><br>
             <textarea name="description" id="" cols="28" rows="5"></textarea>
             <form action="/admin" method="GET">
+                <input type="hidden" name="_csrf" value="<%=csrfToken%>">
                 <button class="btn1" type="submit">Add article</button>
             </form>
         </div>

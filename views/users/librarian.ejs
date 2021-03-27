@@ -36,6 +36,7 @@
                         <li><a href="/update-user/<%=userId%>">Update your data</a></li>
                         <li>
                             <form action="/logout" method="POST">
+                                <input type="hidden" name="_csrf" value="<%=csrfToken%>">
                                 <button type="submit">Logout</button>
                             </form>
                         </li>

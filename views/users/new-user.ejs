@@ -50,6 +50,7 @@
                 </div>
                 <% } %>
                     <form action="/new-user" method="POST">
+                        <input type="hidden" name="_csrf" value="<%=csrfToken%>">
                         <input type="text" placeholder="name" name="name" value="<%=oldValue.name%>"><br>
                         <input type="text" placeholder="username" name="username" value="<%=oldValue.userName%>"><br>
                         <input type="password" placeholder="password" name="password" value="<%=oldValue.password%>"><br>

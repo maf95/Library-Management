@@ -1,0 +1,26 @@
+.led-box {
+    height: 30px;
+    width: 25%;
+    margin: 10px 0;
+    float: right;
+}
+
+.led-grey {
+    margin: 0 auto;
+    width: 24px;
+    height: 24px;
+    background-color: #444543;
+    border-radius: 50%;
+}
+
+.led-green {
+    margin: 0 auto;
+    width: 24px;
+    height: 24px;
+    background-color: #62a71c;
+    border-radius: 50%;
+}
+
+.led-box p {
+    font-size: 8px;
+}

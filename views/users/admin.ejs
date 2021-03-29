@@ -15,6 +15,7 @@
     <link rel="stylesheet" href="/css/style.css">
     <link rel="stylesheet" href="/css/card.css">
     <link rel="stylesheet" href="/css/pagination.css">
+    <link rel="stylesheet" href="/css/led.css">
 
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
@@ -51,7 +52,8 @@
             </nav>
         </header>
         <div class="welcome">
-            <div>Welcome<span><%=name%></span></div>
+            <div>Welcome<span><%=name%></span></div><br>
+
         </div>
         <div class="our-team">
             <div>Our<span>Team</span></div>
@@ -72,37 +74,46 @@
                         <p class="card-text">
                             <%=user.role%>
                         </p>
+
+                        <div class="led-box">
+                            <div id="led-<%=user._id%>" class="<%= user.connected ? 'led-green' : 'led-grey'%>"></div>
+                            <p id="txt-<%=user._id%>">
+                                <%= user.connected ? 'Connected' : 'Disconnected'%>
+                            </p>
+
+                        </div>
+
                         <!-- Button trigger modal -->
-                        <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#exampleModalCenter">Details</button>
-                    </div>
-                </div>
+                        <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#<%=user._id%>" style="outline: none;">Details</button>
 
-                <!-- Modal -->
-                <div class="modal fade" id="exampleModalCenter" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+                        <!-- Modal -->
+                        <div class="modal fade" id="<%=user._id%>" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
 
-                    <div class="modal-dialog modal-dialog-centered" role="document">
-                        <div class="modal-content">
-                            <div class="modal-header">
-                                <h3 class="modal-title" id="exampleModalLongTitle">
-                                    <%=user.name%> -
-                                        <%=user.role%>
-                                </h3>
-                                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-                            </div>
-                            <div class="modal-body">
-                                <h4>E-mail :
-                                    <%=user.email%>
-                                </h4>
-                                <h4>Mobile :
-                                    <%=user.mobilePhone%>
-                                </h4>
-                                <h4>Office :
-                                    <%=user.officePhone%>
-                                </h4>
-                            </div>
-                            <div class="modal-footer">
-                                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                            <div class="modal-dialog modal-dialog-centered" role="document">
+                                <div class="modal-content">
+                                    <div class="modal-header">
+                                        <h3 class="modal-title" id="exampleModalLongTitle">
+                                            <%=user.name%> -
+                                                <%=user.role%>
+                                        </h3>
+                                        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                                    </div>
+                                    <div class="modal-body">
+                                        <h4>E-mail :
+                                            <%=user.email%>
+                                        </h4>
+                                        <h4>Mobile :
+                                            <%=user.mobilePhone%>
+                                        </h4>
+                                        <h4>Office :
+                                            <%=user.officePhone%>
+                                        </h4>
+                                    </div>
+                                    <div class="modal-footer">
+                                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
 
+                                    </div>
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -140,6 +151,22 @@
                 </div>
                 <% } %>
         </div>
+        <script src="/socket.io/socket.io.js"></script>
+        <script>
+            var socket = io();
+            socket.on('logon', data => {
+                const id1 = '#led-' + data.userId;
+                const id2 = '#txt-' + data.userId;
+                $(id1).attr('class', 'led-green')
+                $(id2).html("Connected")
+            })
+            socket.on('logout', data => {
+                const id1 = '#led-' + data.userId;
+                const id2 = '#txt-' + data.userId;
+                $(id1).attr('class', 'led-grey')
+                $(id2).html("Disconnected")
+            })
+        </script>
 
 </body>
 <script>

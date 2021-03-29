@@ -61,4 +61,11 @@ app.use((error, req, res, next) => {
     });
 });
 
-app.listen(3000, console.log("Server started on port 3000"));
+const server = app.listen(3000, console.log("Server started on port 3000"));
+const io = require("./socket").init(server);
+// io.on("connection", (socket) => {
+//     console.log("Client connected!");
+//     socket.on("disconnect", () => {
+//         console.log("user disconnected");
+//     });
+// });

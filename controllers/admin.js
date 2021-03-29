@@ -4,6 +4,7 @@ const session = require("express-session");
 const mongoose = require("mongoose");
 const User = require("../models/user");
 const { validationResult } = require("express-validator");
+const io = require("../socket");
 
 exports.getIndex = (req, res, next) => {
     res.render("users/index", { pageTitle: "Welcome to Library" });
@@ -94,6 +95,7 @@ exports.postUpdateUser = async(req, res, next) => {
                 email: req.body.email,
                 mobilePhone: req.body.mobilePhone,
                 officePhone: req.body.officePhone,
+                role: req.session.user.role,
             },
             errorMessage: errorMessage,
         });
@@ -171,7 +173,7 @@ exports.postNewUser = async(req, res, next) => {
 
 exports.postLogin = async(req, res, next) => {
     try {
-        const user = await User.findOne({ userName: req.body.user });
+        let user = await User.findOne({ userName: req.body.user });
 
         if (!user) {
             req.flash("error", "Incorrect username");
@@ -188,11 +190,16 @@ exports.postLogin = async(req, res, next) => {
             return res.redirect("/authenticate");
         }
 
+        const userId = user._id;
+        user = await User.findByIdAndUpdate(
+            userId, { connected: true }, { new: true }
+        );
         req.session.user = user;
         req.session.isLoggedIn = true;
         req.session.save((err) => {
             console.log(err);
         });
+        io.getIo().emit("logon", { message: "Connected!", userId: user._id });
 
         if (user.firstLogin) {
             req.flash("succes", "At first logn you are required to chamge password!");
@@ -248,7 +255,18 @@ exports.postChangePassword = async(req, res, next) => {
     }
 };
 
-exports.postLogout = (req, res, next) => {
+exports.postLogout = async(req, res, next) => {
+    try {
+        const user = await User.findByIdAndUpdate(req.session.user._id, {
+            connected: false,
+        });
+        io.getIo().emit("logout", { message: "Disconnected!", userId: user._id });
+    } catch (err) {
+        const error = new Error(err);
+        error.httpStatusCode = 500;
+        next(error);
+    }
+
     req.session.destroy(() => {
         res.redirect("/");
     });

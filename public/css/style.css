@@ -6,6 +6,10 @@ body {
     height: 100vh;
 }
 
+button {
+    outline: none;
+}
+
 body {
     font-family: "Helvetica Neue", sans-serif;
     font-weight: lighter;

@@ -14,7 +14,11 @@ router.post("/authenticate", adminController.postLogin);
 
 router.post("/logout", adminController.postLogout);
 
-router.get("/change-password", adminController.getChangePassword);
+router.get(
+    "/change-password",
+    routeProtection.isCorrectUser,
+    adminController.getChangePassword
+);
 
 router.post("/change-password", adminController.postChangePassword);
 

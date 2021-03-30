@@ -33,7 +33,6 @@ exports.getAdmin = async(req, res, next) => {
         .skip((page - 1) * 3)
         .limit(3);
     const userId = req.session.user._id;
-    console.log(req.flash("succes"));
 
     res.render("users/admin", {
         pageTitle: "Admin's page",
@@ -41,6 +40,7 @@ exports.getAdmin = async(req, res, next) => {
         users: users,
         userId: userId,
         hasPrevious: page > 1,
+        hasNext: page < Math.ceil(totalUsers / 3),
         page: page,
         nextPage: page + 1,
         previousPage: page - 1,
@@ -49,7 +49,6 @@ exports.getAdmin = async(req, res, next) => {
 };
 
 exports.getLibrarian = (req, res, next) => {
-    console.log(req.flash("succes"));
     res.render("users/librarian", {
         pageTitle: "Librarian's page",
         userId: req.session.user._id,
@@ -134,7 +133,6 @@ exports.getNewArticle = (req, res, next) => {
 };
 
 exports.getChangePassword = (req, res, next) => {
-    console.log(req.flash("succes"));
     res.render("users/change-password", { pageTitle: "Change Password" });
 };
 
@@ -162,7 +160,7 @@ exports.postNewUser = async(req, res, next) => {
             role: req.body.position,
         });
         await user.save();
-        console.log("User created");
+
         res.redirect("/admin");
     } catch (err) {
         const error = new Error(err);
@@ -178,12 +176,11 @@ exports.postLogin = async(req, res, next) => {
         if (!user) {
             req.flash("error", "Incorrect username");
             req.flash("user", req.body.user);
-            console.log("from not user");
+
             return res.redirect("/authenticate");
         }
         const match = await bcrypt.compare(req.body.password, user.password);
         if (!match) {
-            console.log("from not match");
             req.flash("error", "Wrong password!");
             req.flash("pass", req.body.password);
             req.flash("user", req.body.user);
@@ -197,7 +194,9 @@ exports.postLogin = async(req, res, next) => {
         req.session.user = user;
         req.session.isLoggedIn = true;
         req.session.save((err) => {
-            console.log(err);
+            if (err) {
+                console.log(err);
+            }
         });
         io.getIo().emit("logon", { message: "Connected!", userId: user._id });
 

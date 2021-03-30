@@ -128,23 +128,49 @@
                         <ul class="pagination">
 
                             <% if(totalPage===2) { %>
-                                <li class="page-item">
-                                    <a href="?page=1" class="page-link" aria-label="Previous">
-                                        <span aria-hidden="true">«</span>
-                                    </a>
-                                </li>
-                                <li class="page-item <%=page=='1'?'active':''%>"><a class="page-link" href="?page=1">1</a></li>
-                                <li class="page-item <%=page=='2'?'active':''%>"><a class="page-link" href="?page=2">2</a></li>
-                                <li class="page-item">
-                                    <a href="?page=2" class="page-link" aria-label="Next">
-                                        <span aria-hidden="true">»</span>
-                                    </a>
-                                </li>
-                                <%} else { %>
-                                    <li class="page-item <%=page=='1'?'active':''%>"><a class="page-link" href="?page=1">1</a></li>
-                                    <li class="page-item"><a class="page-link" href="?page=2">2</a></li>
-                                    <li class="page-item"><a class="page-link" href="#">3</a></li>
+                                <% if(hasPrevious) { %>
+                                    <li class="page-item">
+                                        <a href="?page=<%=previousPage%>" class="page-link" aria-label="Previous">
+                                            <span aria-hidden="true">«</span>
+                                        </a>
+                                    </li>
                                     <% } %>
+                                        <li class="page-item <%=page=='1'?'active':''%>"><a class="page-link" href="?page=1">1</a></li>
+                                        <li class="page-item <%=page=='2'?'active':''%>"><a class="page-link" href="?page=2">2</a></li>
+                                        <% if(hasNext) { %>
+                                            <li class="page-item">
+                                                <a href="?page=<%=nextPage%>" class="page-link" aria-label="Next">
+                                                    <span aria-hidden="true">»</span>
+                                                </a>
+                                            </li>
+                                            <% } %>
+                                                <%} else { %>
+                                                    <% if(hasPrevious) { %>
+                                                        <li class="page-item">
+                                                            <a href="?page=<%=previousPage%>" class="page-link" aria-label="Previous">
+                                                                <span aria-hidden="true">«</span>
+                                                            </a>
+                                                        </li>
+                                                        <% } %>
+                                                            <li class="page-item <%=page=='1'?'active':''%>"><a class="page-link" href="?page=1">1</a></li>
+                                                            <li class="page-item <%=page=='1'||page==totalPage ? '':'active'%>">
+                                                                <a class="page-link" href="?page=2">
+                                                                    <%=page=='1'||page==totalPage ? 2 : page%>
+                                                                </a>
+                                                            </li>
+                                                            <li class="page-item <%=page==totalPage ?'active':''%>">
+                                                                <a class="page-link" href="?page=<%=totalPage%>">
+                                                                    <%=totalPage%>
+                                                                </a>
+                                                            </li>
+                                                            <% if(hasNext) { %>
+                                                                <li class="page-item">
+                                                                    <a href="?page=<%=nextPage%>" class="page-link" aria-label="Next">
+                                                                        <span aria-hidden="true">»</span>
+                                                                    </a>
+                                                                </li>
+                                                                <% } %>
+                                                                    <% } %>
 
                         </ul>
                     </nav>

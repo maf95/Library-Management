@@ -46,12 +46,56 @@ body {
     z-index: 2;
 }
 
+.list-title {
+    position: absolute;
+    top: 150px;
+    left: 150px;
+    z-index: 2;
+}
+
+.list-container {
+    position: absolute;
+    top: 230px;
+    left: 100px;
+    width: 80%;
+}
+
+.user-element {
+    border: 3px solid #5379fa !important;
+    border-radius: 5px;
+    box-shadow: 5px 5px 5px rgb(62, 62, 68);
+    font-size: 2rem;
+    font-family: 'Exo', sans-serif;
+    color: rgb(204, 188, 188);
+    padding: 10px;
+    background-color: #95969b !important;
+    margin-bottom: 20px;
+}
+
+.user-element button {
+    float: right;
+}
+
+.user-element span {
+    color: #3b58b6 !important;
+    font-weight: bold;
+    margin-right: 15px;
+}
+
 .welcome div {
     float: left;
     color: #fff;
     font-family: 'Exo', sans-serif;
     font-size: 2rem;
     font-weight: 200;
+}
+
+.list-title div {
+    float: left;
+    color: #fff;
+    font-family: 'Exo', sans-serif;
+    font-size: 4rem;
+    font-weight: 300;
 }
 
 .our-team div {
@@ -63,7 +107,8 @@ body {
 }
 
 .welcome div span,
-.our-team span {
+.our-team span,
+.list-title span {
     color: #5379fa !important;
 }
 

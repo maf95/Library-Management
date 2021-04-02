@@ -53,12 +53,14 @@ app.use((error, req, res, next) => {
     let role = "";
     if (req.session.user) {
         role = req.session.user.role;
+        console.log(role);
+        return res.status(500).render("error/500", {
+            pageTitle: "Error!",
+            error: error,
+            role: role,
+        });
     }
-    res.status(500).render("error/500", {
-        pageTitle: "Error!",
-        error: error,
-        role: role,
-    });
+    res.render("/");
 });
 
 const server = app.listen(3000, console.log("Server started on port 3000"));

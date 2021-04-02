@@ -6,81 +6,6 @@ const User = require("../models/user");
 const { validationResult } = require("express-validator");
 const io = require("../socket");
 
-exports.getIndex = (req, res, next) => {
-    res.render("users/index", { pageTitle: "Welcome to Library" });
-};
-
-exports.getLogin = (req, res, next) => {
-    const errors = req.flash("error");
-    const userName = req.flash("user")[0] || "";
-    const pass = req.flash("pass")[0] || "";
-    let error = "";
-    if (errors.length > 0) {
-        error = errors[0];
-    }
-    res.render("users/login", {
-        pageTitle: "Login",
-        error: error,
-        user: userName,
-        pass: pass,
-    });
-};
-
-exports.getAdmin = async(req, res, next) => {
-    const page = +req.query.page || 1;
-    const totalUsers = await User.find().countDocuments();
-    const users = await User.find()
-        .skip((page - 1) * 3)
-        .limit(3);
-    const userId = req.session.user._id;
-
-    res.render("users/admin", {
-        pageTitle: "Admin's page",
-        name: req.session.user.name,
-        users: users,
-        userId: userId,
-        hasPrevious: page > 1,
-        hasNext: page < Math.ceil(totalUsers / 3),
-        page: page,
-        nextPage: page + 1,
-        previousPage: page - 1,
-        totalPage: Math.ceil(totalUsers / 3),
-    });
-};
-
-exports.getLibrarian = (req, res, next) => {
-    res.render("users/librarian", {
-        pageTitle: "Librarian's page",
-        userId: req.session.user._id,
-        succes: req.flash("succes"),
-    });
-};
-
-exports.getNewUser = (req, res, next) => {
-    res.render("users/new-user", {
-        pageTitle: "Add new user",
-        errorMessage: "",
-        oldValue: {},
-    });
-};
-
-exports.getUpdateUser = async(req, res, next) => {
-    const userId = req.params.userId;
-    try {
-        const user = await User.findById(userId);
-
-        res.render("users/update-user", {
-            pageTitle: "Update your data",
-            user: user,
-            errorMessage: "",
-        });
-    } catch (err) {
-        const error = new Error(err);
-        error.httpStatusCode = 500;
-        next(error);
-    }
-};
-
 exports.postUpdateUser = async(req, res, next) => {
     const errors = validationResult(req);
 
@@ -126,14 +51,6 @@ exports.postUpdateUser = async(req, res, next) => {
         error.httpStatusCode = 500;
         next(error);
     }
-};
-
-exports.getNewArticle = (req, res, next) => {
-    res.render("articles/new-article", { pageTitle: "Add new article" });
-};
-
-exports.getChangePassword = (req, res, next) => {
-    res.render("users/change-password", { pageTitle: "Change Password" });
 };
 
 exports.postNewUser = async(req, res, next) => {
@@ -201,7 +118,7 @@ exports.postLogin = async(req, res, next) => {
         io.getIo().emit("logon", { message: "Connected!", userId: user._id });
 
         if (user.firstLogin) {
-            req.flash("succes", "At first logn you are required to chamge password!");
+            req.flash("succes", "At first logn you are required to change password!");
             return res.redirect("/change-password");
         }
 
@@ -256,9 +173,14 @@ exports.postChangePassword = async(req, res, next) => {
 
 exports.postLogout = async(req, res, next) => {
     try {
-        const user = await User.findByIdAndUpdate(req.session.user._id, {
-            connected: false,
-        });
+        const user = await User.findByIdAndUpdate(
+            req.session.user._id, {
+                connected: false,
+            }, { new: true }
+        );
+        if (!user) {
+            return res.redirect("/");
+        }
         io.getIo().emit("logout", { message: "Disconnected!", userId: user._id });
     } catch (err) {
         const error = new Error(err);
@@ -269,4 +191,16 @@ exports.postLogout = async(req, res, next) => {
     req.session.destroy(() => {
         res.redirect("/");
     });
+};
+
+exports.postDeleteUser = async(req, res, next) => {
+    const userId = req.params.userId;
+    try {
+        await User.findByIdAndDelete(userId);
+        res.redirect("/manage-users");
+    } catch (err) {
+        const error = new Error(err);
+        error.httpStatusCode = 500;
+        next(error);
+    }
 };

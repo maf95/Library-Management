@@ -8,6 +8,7 @@ const dbURI =
 const connectionOptions = {
     useNewUrlParser: true,
     useUnifiedTopology: true,
+    useCreateIndex: true,
 };
 
 mongoose.connect(dbURI, connectionOptions);

@@ -1,14 +1,16 @@
 const express = require("express");
-const adminController = require("../controllers/admin");
+const adminController = require("../controllers/postControllers");
 const routeProtection = require("../middleware/route-protection.js");
 const { check } = require("express-validator");
 const User = require("../models/user");
+const getControllers = require("../controllers/getControllers");
+const postControllers = require("../controllers/postControllers");
 
 const router = express.Router();
 
-router.get("/", adminController.getIndex);
+router.get("/", getControllers.getIndex);
 
-router.get("/authenticate", adminController.getLogin);
+router.get("/authenticate", getControllers.getLogin);
 
 router.post("/authenticate", adminController.postLogin);
 
@@ -16,21 +18,21 @@ router.post("/logout", adminController.postLogout);
 
 router.get(
     "/change-password",
-    routeProtection.isCorrectUser,
-    adminController.getChangePassword
+
+    getControllers.getChangePassword
 );
 
 router.post("/change-password", adminController.postChangePassword);
 
-router.get("/admin", routeProtection.isAdmin, adminController.getAdmin);
+router.get("/admin", routeProtection.isAdmin, getControllers.getAdmin);
 
 router.get(
     "/librarian",
     routeProtection.isLibrarian,
-    adminController.getLibrarian
+    getControllers.getLibrarian
 );
 
-router.get("/new-user", routeProtection.isAdmin, adminController.getNewUser);
+router.get("/new-user", routeProtection.isAdmin, getControllers.getNewUser);
 
 router.post(
     "/new-user", [
@@ -55,17 +57,24 @@ router.post(
         check("password")
         .isLength({ min: 1 })
         .withMessage("Password field cannot be empty!"),
+        check("position").custom((value) => {
+            console.log(value);
+            if (value != "admin" && value != "librarian") {
+                throw "User should have a role assigned!";
+            }
+            return true;
+        }),
     ],
     routeProtection.isAdmin,
     adminController.postNewUser
 );
 
-router.get("/new-article", adminController.getNewArticle);
+router.get("/new-article", getControllers.getNewArticle);
 
 router.get(
     "/update-user/:userId",
     routeProtection.isCorrectUser,
-    adminController.getUpdateUser
+    getControllers.getUpdateUser
 );
 
 router.post(
@@ -107,7 +116,16 @@ router.post(
         .isNumeric()
         .withMessage("Office phone number should contain only numbers!"),
     ],
-    adminController.postUpdateUser
+
+    postControllers.postUpdateUser
 );
+
+router.get(
+    "/manage-users",
+    routeProtection.isAdmin,
+    getControllers.getManageUsers
+);
+
+router.post("/delete-user/:userId", postControllers.postDeleteUser);
 
 module.exports = router;

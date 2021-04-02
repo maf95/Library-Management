@@ -10,6 +10,7 @@ const userSchema = new Schema({
     email: {
         type: String,
         unique: true,
+        sparse: true,
     },
     mobilePhone: String,
     officePhone: String,

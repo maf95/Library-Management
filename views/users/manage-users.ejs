@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>
+        <%=pageTitle%>
+    </title>
+    <link href="//maxcdn.bootstrapcdn.com/bootstrap/4.1.1/css/bootstrap.min.css" rel="stylesheet" id="bootstrap-css">
+    <script src="//maxcdn.bootstrapcdn.com/bootstrap/4.1.1/js/bootstrap.min.js"></script>
+    <script src="https://code.jquery.com/jquery-3.3.1.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <link rel="stylesheet" href="/css/style.css">
+    <link rel="stylesheet" href="/css/card.css">
+    <link rel="stylesheet" href="/css/pagination.css">
+    <link rel="stylesheet" href="/css/led.css">
+
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
+
+</head>
+
+<body>
+    <header>
+        <nav class="top">
+            <div class="menu-icon">
+                <i class="fa fa-bars fa-2x"></i>
+            </div>
+            <div class="logo">
+                UNIVERSITY LIBRARY
+            </div>
+            <div class="menu">
+                <ul>
+                    <li><a href="/new-user">Create user</a></li>
+                    <li><a href="/admin">Back</a></li>
+                </ul>
+            </div>
+        </nav>
+    </header>
+    <div class="list-title">
+        <div>Users<span>List</span></div>
+    </div>
+    <div class="list-container">
+        <% users.forEach(user =>{ %>
+            <div class="user-element">
+                Name: <span><%=user.name%></span> username: <span><%=user.userName%></span> role: <span><%=user.role%></span> state: <span id="spn-<%=user._id%>"><%=user.connected ? 'connected' :'disconnected'%></span>
+                <div style="position: relative; top: -30px;">
+
+                    <form action="/delete-user/<%=user._id%>" method="POST">
+                        <input type="hidden" name="_csrf" value="<%=csrfToken%>">
+                        <button class="btn" <%=user.userName===currentUser ? 'disabled' : ''%>>DELETE USER</button>
+                    </form>
+                </div>
+
+            </div>
+            <% }) %>
+
+    </div>
+    <%-include('../includes/pagination.ejs')%>
+        <script src="/socket.io/socket.io.js"></script>
+        <script>
+            var socket = io();
+            socket.on('logon', data => {
+
+                const id3 = '#spn-' + data.userId;
+
+                $(id3).text('connected');
+            })
+            socket.on('logout', data => {
+
+                const id3 = '#spn-' + data.userId;
+
+                $(id3).text('disconnected');
+            })
+        </script>
+</body>
+
+</html>

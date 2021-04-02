@@ -10,11 +10,16 @@
     </title>
     <link href="//maxcdn.bootstrapcdn.com/bootstrap/4.1.1/css/bootstrap.min.css" rel="stylesheet" id="bootstrap-css">
     <script src="//maxcdn.bootstrapcdn.com/bootstrap/4.1.1/js/bootstrap.min.js"></script>
-    <script src="//cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
-    <link rel="stylesheet" href="/css/style.css">
-    <link rel="stylesheet" href="/css/main.css">
-    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
     <script src="https://code.jquery.com/jquery-3.3.1.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <link rel="stylesheet" href="/css/style.css">
+    <link rel="stylesheet" href="/css/card.css">
+    <link rel="stylesheet" href="/css/pagination.css">
+    <link rel="stylesheet" href="/css/led.css">
+
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
 
 </head>
 
@@ -31,8 +36,8 @@
                 </div>
                 <div class="menu">
                     <ul>
-                        <li><a href="/new-article">Add item</a></li>
-                        <li><a href="#">Add from file</a></li>
+
+                        <li><a href="/library">Library</a></li>
                         <li><a href="/update-user/<%=userId%>">Update your data</a></li>
                         <li>
                             <form action="/logout" method="POST">
@@ -45,9 +50,26 @@
                 </div>
             </nav>
         </header>
-
+        <%-include('../includes/team.ejs')%>
+            <%-include('../includes/pagination.ejs')%>
     </div>
-    <div>aaaa</div>
+
+    <script src="/socket.io/socket.io.js"></script>
+    <script>
+        var socket = io();
+        socket.on('logon', data => {
+            const id1 = '#led-' + data.userId;
+            const id2 = '#txt-' + data.userId;
+            $(id1).attr('class', 'led-green')
+            $(id2).html("Connected")
+        })
+        socket.on('logout', data => {
+            const id1 = '#led-' + data.userId;
+            const id2 = '#txt-' + data.userId;
+            $(id1).attr('class', 'led-grey')
+            $(id2).html("Disconnected")
+        })
+    </script>
 </body>
 
 <script>

@@ -35,164 +35,39 @@
                 </div>
                 <div class="menu">
                     <ul>
-                        <li><a href="/new-user">Create user</a></li>
+
                         <li><a href="/update-user/<%=userId%>">Update your data</a></li>
-                        <li><a href="/sessions">Manage users</a></li>
+                        <li><a href="/manage-users">Manage users</a></li>
                         <li>
                             <form action="/logout" method="POST">
                                 <input type="hidden" name="_csrf" value="<%=csrfToken%>">
                                 <button type="submit">Logout</button>
                             </form>
                         </li>
-
-
-
                     </ul>
                 </div>
             </nav>
         </header>
-        <div class="welcome">
-            <div>Welcome<span><%=name%></span></div><br>
+        <%-include('../includes/team.ejs')%>
+            <%- include('../includes/pagination.ejs')%>
+    </div>
 
-        </div>
-        <div class="our-team">
-            <div>Our<span>Team</span></div>
-        </div>
-        <div class="container">
-            <% users.forEach(user=>{ %>
-                <div class="card" style="background-color: rgb(171, 164, 164);">
-                    <div class="bg-image hover-overlay ripple" data-mdb-ripple-color="light">
-                        <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcS5Nv9ABIbG874uoduwWiGydgOZzgY2Z0nuew&usqp=CAU" class="img-fluid" />
-                        <a href="#!">
-                            <div class="mask" style="background-color: rgba(251, 251, 251, 0.15)"></div>
-                        </a>
-                    </div>
-                    <div class="card-body">
-                        <h5 class="card-title">
-                            <%=user.name%>
-                        </h5>
-                        <p class="card-text">
-                            <%=user.role%>
-                        </p>
-
-                        <div class="led-box">
-                            <div id="led-<%=user._id%>" class="<%= user.connected ? 'led-green' : 'led-grey'%>"></div>
-                            <p id="txt-<%=user._id%>">
-                                <%= user.connected ? 'Connected' : 'Disconnected'%>
-                            </p>
-
-                        </div>
-
-                        <!-- Button trigger modal -->
-                        <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#<%=user._id%>" style="outline: none;">Details</button>
-
-                        <!-- Modal -->
-                        <div class="modal fade" id="<%=user._id%>" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
-
-                            <div class="modal-dialog modal-dialog-centered" role="document">
-                                <div class="modal-content">
-                                    <div class="modal-header">
-                                        <h3 class="modal-title" id="exampleModalLongTitle">
-                                            <%=user.name%> -
-                                                <%=user.role%>
-                                        </h3>
-                                        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-                                    </div>
-                                    <div class="modal-body">
-                                        <h4>E-mail :
-                                            <%=user.email%>
-                                        </h4>
-                                        <h4>Mobile :
-                                            <%=user.mobilePhone%>
-                                        </h4>
-                                        <h4>Office :
-                                            <%=user.officePhone%>
-                                        </h4>
-                                    </div>
-                                    <div class="modal-footer">
-                                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                <% }) %>
-        </div>
-        <div class="pagination-container">
-            <% if(totalPage>1) { %>
-                <div class="demo">
-                    <nav class="pagination-outer" aria-label="Page navigation">
-                        <ul class="pagination">
-
-                            <% if(totalPage===2) { %>
-                                <% if(hasPrevious) { %>
-                                    <li class="page-item">
-                                        <a href="?page=<%=previousPage%>" class="page-link" aria-label="Previous">
-                                            <span aria-hidden="true">«</span>
-                                        </a>
-                                    </li>
-                                    <% } %>
-                                        <li class="page-item <%=page=='1'?'active':''%>"><a class="page-link" href="?page=1">1</a></li>
-                                        <li class="page-item <%=page=='2'?'active':''%>"><a class="page-link" href="?page=2">2</a></li>
-                                        <% if(hasNext) { %>
-                                            <li class="page-item">
-                                                <a href="?page=<%=nextPage%>" class="page-link" aria-label="Next">
-                                                    <span aria-hidden="true">»</span>
-                                                </a>
-                                            </li>
-                                            <% } %>
-                                                <%} else { %>
-                                                    <% if(hasPrevious) { %>
-                                                        <li class="page-item">
-                                                            <a href="?page=<%=previousPage%>" class="page-link" aria-label="Previous">
-                                                                <span aria-hidden="true">«</span>
-                                                            </a>
-                                                        </li>
-                                                        <% } %>
-                                                            <li class="page-item <%=page=='1'?'active':''%>"><a class="page-link" href="?page=1">1</a></li>
-                                                            <li class="page-item <%=page=='1'||page==totalPage ? '':'active'%>">
-                                                                <a class="page-link" href="?page=2">
-                                                                    <%=page=='1'||page==totalPage ? 2 : page%>
-                                                                </a>
-                                                            </li>
-                                                            <li class="page-item <%=page==totalPage ?'active':''%>">
-                                                                <a class="page-link" href="?page=<%=totalPage%>">
-                                                                    <%=totalPage%>
-                                                                </a>
-                                                            </li>
-                                                            <% if(hasNext) { %>
-                                                                <li class="page-item">
-                                                                    <a href="?page=<%=nextPage%>" class="page-link" aria-label="Next">
-                                                                        <span aria-hidden="true">»</span>
-                                                                    </a>
-                                                                </li>
-                                                                <% } %>
-                                                                    <% } %>
-
-                        </ul>
-                    </nav>
-                </div>
-                <% } %>
-        </div>
-        <script src="/socket.io/socket.io.js"></script>
-        <script>
-            var socket = io();
-            socket.on('logon', data => {
-                const id1 = '#led-' + data.userId;
-                const id2 = '#txt-' + data.userId;
-                $(id1).attr('class', 'led-green')
-                $(id2).html("Connected")
-            })
-            socket.on('logout', data => {
-                const id1 = '#led-' + data.userId;
-                const id2 = '#txt-' + data.userId;
-                $(id1).attr('class', 'led-grey')
-                $(id2).html("Disconnected")
-            })
-        </script>
+    <script src="/socket.io/socket.io.js"></script>
+    <script>
+        var socket = io();
+        socket.on('logon', data => {
+            const id1 = '#led-' + data.userId;
+            const id2 = '#txt-' + data.userId;
+            $(id1).attr('class', 'led-green')
+            $(id2).html("Connected")
+        })
+        socket.on('logout', data => {
+            const id1 = '#led-' + data.userId;
+            const id2 = '#txt-' + data.userId;
+            $(id1).attr('class', 'led-grey')
+            $(id2).html("Disconnected")
+        })
+    </script>
 
 </body>
 <script>
@@ -200,6 +75,7 @@
         $(".menu-icon").on("click", function() {
             $("nav ul").toggleClass("showing");
         });
+
     });
 
     // Scrolling Effect

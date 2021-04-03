@@ -67,6 +67,9 @@
             $(id1).attr('class', 'led-grey')
             $(id2).html("Disconnected")
         })
+        socket.on('newUserCreated', data => {
+            location.reload()
+        })
     </script>
 
 </body>

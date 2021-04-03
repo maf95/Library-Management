@@ -45,7 +45,7 @@
     </div>
     <div class="list-container">
         <% users.forEach(user =>{ %>
-            <div class="user-element">
+            <div id="elem-<%=user._id%>" class="user-element">
                 Name: <span><%=user.name%></span> username: <span><%=user.userName%></span> role: <span><%=user.role%></span> state: <span id="spn-<%=user._id%>"><%=user.connected ? 'connected' :'disconnected'%></span>
                 <div style="position: relative; top: -30px;">
 
@@ -64,16 +64,19 @@
         <script>
             var socket = io();
             socket.on('logon', data => {
-
                 const id3 = '#spn-' + data.userId;
-
                 $(id3).text('connected');
             })
             socket.on('logout', data => {
-
                 const id3 = '#spn-' + data.userId;
-
                 $(id3).text('disconnected');
+            })
+            socket.on('deleteUser', data => {
+                const id = '#elem-' + data.userId
+                $(id).remove()
+            })
+            socket.on('newUserCreated', data => {
+                location.reload()
             })
         </script>
 </body>

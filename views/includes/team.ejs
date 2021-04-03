@@ -7,7 +7,7 @@
 </div>
 <div class="container">
     <% users.forEach(user=>{ %>
-        <div class="card" style="background-color: rgb(171, 164, 164);">
+        <div id="card-<%=user._id%>" class="card" style="background-color: rgb(171, 164, 164);">
             <div class="bg-image hover-overlay ripple" data-mdb-ripple-color="light">
                 <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcS5Nv9ABIbG874uoduwWiGydgOZzgY2Z0nuew&usqp=CAU" class="img-fluid" />
                 <a href="#!">

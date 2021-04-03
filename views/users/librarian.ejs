@@ -69,6 +69,13 @@
             $(id1).attr('class', 'led-grey')
             $(id2).html("Disconnected")
         })
+        socket.on('deleteUser', data => {
+            const id = '#card-' + data.userId;
+            $(id).remove();
+        })
+        socket.on('newUserCreated', data => {
+            location.reload()
+        })
     </script>
 </body>
 

@@ -77,7 +77,7 @@ exports.postNewUser = async(req, res, next) => {
             role: req.body.position,
         });
         await user.save();
-
+        io.getIo().emit("newUserCreated", { message: "New user was created!!" });
         res.redirect("/admin");
     } catch (err) {
         const error = new Error(err);
@@ -196,8 +196,23 @@ exports.postLogout = async(req, res, next) => {
 exports.postDeleteUser = async(req, res, next) => {
     const userId = req.params.userId;
     try {
-        await User.findByIdAndDelete(userId);
-        res.redirect("/manage-users");
+        const user = await User.findById(userId);
+        if (user.role === "admin") {
+            const users = await User.find({ role: "admin" });
+            if (users.length === 1) {
+                return res.redirect("/");
+            }
+        }
+        await User.findByIdAndDelete(userId, (err) => {
+            if (err) {
+                return res.redirect("/manage-users");
+            }
+            io.getIo().emit("deleteUser", {
+                message: "User deleted!",
+                userId: userId,
+            });
+            res.redirect("/manage-users");
+        });
     } catch (err) {
         const error = new Error(err);
         error.httpStatusCode = 500;

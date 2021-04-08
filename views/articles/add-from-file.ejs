@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>
+        <%=pageTitle%>
+    </title>
+    <link href="//maxcdn.bootstrapcdn.com/bootstrap/4.1.1/css/bootstrap.min.css" rel="stylesheet" id="bootstrap-css">
+    <script src="//maxcdn.bootstrapcdn.com/bootstrap/4.1.1/js/bootstrap.min.js"></script>
+    <script src="https://code.jquery.com/jquery-3.3.1.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <link rel="stylesheet" href="/css/style.css">
+    <link rel="stylesheet" href="/css/main.css">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
+
+</head>
+
+<body>
+    <header>
+        <nav class="top">
+            <div class="menu-icon">
+                <i class="fa fa-bars fa-2x"></i>
+            </div>
+            <div class="logo">
+                UNIVERSITY LIBRARY
+            </div>
+            <div class="menu">
+                <ul>
+
+                    <li><a href="/librarian">Back</a></li>
+                </ul>
+            </div>
+        </nav>
+    </header>
+    <div class="library">
+        <% if(errorMessage!=='') { %>
+            <div style="color: red; font-size: 20px;">
+                <%=errorMessage%>
+            </div>
+            <% } %>
+                <form action="/add-from-file" method="POST" enctype="multipart/form-data">
+                    <label for="myfile">Select a <span>file :</span></label>
+                    <input type="file" id="myfile" name="myfile"><br><br>
+                    <button type="submit">Read file</button>
+                    <input type="hidden" name="_csrf" value="<%=csrfToken%>">
+                </form>
+    </div>
+
+
+
+</body>
+<script>
+    $(document).ready(function() {
+        $(".menu-icon").on("click", function() {
+            $("nav ul").toggleClass("showing");
+        });
+    });
+
+
+    // Scrolling Effect
+
+    $(window).on("scroll", function() {
+        if ($(window).scrollTop()) {
+            $('nav').addClass('black');
+        } else {
+            $('nav').removeClass('black');
+        }
+    })
+</script>
+
+
+</html>

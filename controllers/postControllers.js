@@ -5,7 +5,11 @@ const mongoose = require("mongoose");
 const User = require("../models/user");
 const { validationResult } = require("express-validator");
 const io = require("../socket");
-
+const csv = require("csv-parser");
+const fs = require("fs");
+const path = require("path");
+const helper = require("../util/helperFunctions");
+const Article = require("../models/article");
 exports.postUpdateUser = async(req, res, next) => {
     const errors = validationResult(req);
 
@@ -213,6 +217,54 @@ exports.postDeleteUser = async(req, res, next) => {
             });
             res.redirect("/manage-users");
         });
+    } catch (err) {
+        const error = new Error(err);
+        error.httpStatusCode = 500;
+        next(error);
+    }
+};
+
+exports.postAddFromFile = (req, res, next) => {
+    try {
+        let articles = [];
+        const extension = req.file.originalname.split(".")[1];
+        if (extension === "csv") {
+            fs.createReadStream(path.join(__dirname, "..", "files", "data.csv"))
+                .pipe(csv())
+                .on("data", (data) => {
+                    articles.push(data);
+                })
+                .on("end", () => {
+                    helper.createRecord(articles);
+                })
+                .on("error", (err) => {
+                    throw new Error(err);
+                });
+
+            fs.unlink(path.join(__dirname, "..", "files", "data.csv"), (err) => {
+                if (err) {
+                    throw new Error(err);
+                }
+            });
+
+            // return res.redirect("/add-from-file");
+        } else if (extension === "json") {
+            fs.readFile(
+                path.join(__dirname, "..", "files", "data.json"),
+                (err, data) => {
+                    if (err) throw err;
+                    articles = JSON.parse(data);
+                    helper.createRecord(articles);
+                }
+            );
+
+            fs.unlink(path.join(__dirname, "..", "files", "data.json"), (err) => {
+                if (err) {
+                    throw new Error(err);
+                }
+            });
+        }
+        res.redirect("/library");
     } catch (err) {
         const error = new Error(err);
         error.httpStatusCode = 500;

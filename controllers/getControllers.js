@@ -134,3 +134,15 @@ exports.getManageUsers = async(req, res, next) => {
         currentUser: current,
     });
 };
+
+exports.getLibrary = (req, res, next) => {
+    res.render("articles/library", { pageTitle: "Library" });
+};
+
+exports.getAddFromFile = (req, res, next) => {
+    const error = req.flash("error") || "";
+    res.render("articles/add-from-file", {
+        pageTitle: "Add from file",
+        errorMessage: error,
+    });
+};

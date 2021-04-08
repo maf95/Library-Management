@@ -128,4 +128,10 @@ router.get(
 
 router.post("/delete-user/:userId", postControllers.postDeleteUser);
 
+router.get("/library", getControllers.getLibrary);
+
+router.post("/add-from-file", postControllers.postAddFromFile);
+
+router.get("/add-from-file", getControllers.getAddFromFile);
+
 module.exports = router;

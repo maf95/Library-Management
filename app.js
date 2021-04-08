@@ -10,14 +10,37 @@ const MongoDBStore = require("connect-mongodb-session")(session);
 const nocache = require("nocache");
 const flash = require("connect-flash");
 const csrf = require("csurf");
+const multer = require("multer");
 const password = process.env.PASSWORD_MONGODB;
 const dbURI =
     "mongodb+srv://catalin:" +
     password +
     "@cluster0.ecbtg.mongodb.net/Library?retryWrites=true&w=majority";
 
+const fileStorage = multer.diskStorage({
+    destination: (req, file, cb) => {
+        cb(null, "files");
+    },
+
+    filename: (req, file, cb) => {
+        const extension = file.originalname.split(".")[1];
+        cb(null, "data." + extension);
+    },
+});
+
+const fileFilter = (req, file, cb) => {
+    const extension = file.originalname.split(".")[1];
+    if (extension === "json" || extension === "csv") {
+        return cb(null, true);
+    }
+    cb(null, false);
+};
+
 const app = express();
 app.use(express.urlencoded({ extended: true }));
+app.use(
+    multer({ storage: fileStorage, fileFilter: fileFilter }).single("myfile")
+);
 app.set("view engine", "ejs");
 app.set("views", "views");
 const csrfProtection = csrf();
@@ -53,7 +76,6 @@ app.use((error, req, res, next) => {
     let role = "";
     if (req.session.user) {
         role = req.session.user.role;
-        console.log(role);
         return res.status(500).render("error/500", {
             pageTitle: "Error!",
             error: error,

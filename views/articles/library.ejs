@@ -39,7 +39,15 @@
             </div>
         </nav>
     </header>
+    <div class="library">
 
+        <% if(succesMessage!=='') { %>
+            <div style="color: rgb(17, 0, 255); font-size: 20px;">
+                <%=succesMessage%>
+            </div>
+            <% } %>
+
+    </div>
 </body>
 <script>
     $(document).ready(function() {

@@ -38,9 +38,9 @@
         </nav>
     </header>
     <div class="library">
-        <% if(errorMessage!=='') { %>
-            <div style="color: red; font-size: 20px;">
-                <%=errorMessage%>
+        <% if(succesMessage!=='' ) { %>
+            <div style="color: rgb(17, 0, 255); font-size: 20px;">
+                <%=succesMessage%>
             </div>
             <% } %>
                 <form action="/add-from-file" method="POST" enctype="multipart/form-data">

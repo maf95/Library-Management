@@ -5,11 +5,11 @@ const mongoose = require("mongoose");
 const User = require("../models/user");
 const { validationResult } = require("express-validator");
 const io = require("../socket");
-const csv = require("csv-parser");
-const fs = require("fs");
+const fs = require("mz/fs");
 const path = require("path");
 const helper = require("../util/helperFunctions");
 const Article = require("../models/article");
+const neatCsv = require("neat-csv");
 exports.postUpdateUser = async(req, res, next) => {
     const errors = validationResult(req);
 
@@ -224,47 +224,44 @@ exports.postDeleteUser = async(req, res, next) => {
     }
 };
 
-exports.postAddFromFile = (req, res, next) => {
+exports.postAddFromFile = async(req, res, next) => {
     try {
         let articles = [];
         const extension = req.file.originalname.split(".")[1];
         if (extension === "csv") {
-            fs.createReadStream(path.join(__dirname, "..", "files", "data.csv"))
-                .pipe(csv())
-                .on("data", (data) => {
-                    articles.push(data);
-                })
-                .on("end", () => {
-                    helper.createRecord(articles);
-                })
-                .on("error", (err) => {
-                    throw new Error(err);
-                });
+            const data = await fs.readFile(
+                path.join(__dirname, "..", "files", "data.csv")
+            );
+            articles = await neatCsv(data);
+            const records = helper.createRecord(articles);
 
             fs.unlink(path.join(__dirname, "..", "files", "data.csv"), (err) => {
                 if (err) {
                     throw new Error(err);
                 }
+                req.flash(
+                    "succes",
+                    records + " records were succesfully added to the database."
+                );
+                res.redirect("/add-from-file");
             });
-
-            // return res.redirect("/add-from-file");
         } else if (extension === "json") {
-            fs.readFile(
-                path.join(__dirname, "..", "files", "data.json"),
-                (err, data) => {
-                    if (err) throw err;
-                    articles = JSON.parse(data);
-                    helper.createRecord(articles);
-                }
+            const data = await fs.readFile(
+                path.join(__dirname, "..", "files", "data.json")
             );
-
+            articles = JSON.parse(data);
+            const records = helper.createRecord(articles);
             fs.unlink(path.join(__dirname, "..", "files", "data.json"), (err) => {
                 if (err) {
                     throw new Error(err);
                 }
             });
+            req.flash(
+                "succes",
+                records + " records were succesfully added to the database."
+            );
+            res.redirect("/add-from-file");
         }
-        res.redirect("/library");
     } catch (err) {
         const error = new Error(err);
         error.httpStatusCode = 500;

@@ -136,13 +136,18 @@ exports.getManageUsers = async(req, res, next) => {
 };
 
 exports.getLibrary = (req, res, next) => {
-    res.render("articles/library", { pageTitle: "Library" });
+    const succes = req.flash("succes") || "";
+
+    res.render("articles/library", {
+        pageTitle: "Library",
+        succesMessage: succes,
+    });
 };
 
 exports.getAddFromFile = (req, res, next) => {
-    const error = req.flash("error") || "";
+    const succes = req.flash("succes") || "";
     res.render("articles/add-from-file", {
         pageTitle: "Add from file",
-        errorMessage: error,
+        succesMessage: succes,
     });
 };

@@ -10,6 +10,7 @@ const path = require("path");
 const helper = require("../util/helperFunctions");
 const Article = require("../models/article");
 const neatCsv = require("neat-csv");
+
 exports.postUpdateUser = async(req, res, next) => {
     const errors = validationResult(req);
 
@@ -127,11 +128,9 @@ exports.postLogin = async(req, res, next) => {
         }
 
         if (user.role === "admin") {
-            req.flash("succes", "Successfully login as administrator!");
             return res.redirect("/admin");
         }
         if (user.role === "librarian") {
-            req.flash("succes", "Successfully login as librarian!");
             return res.redirect("/librarian");
         }
 
@@ -239,12 +238,12 @@ exports.postAddFromFile = async(req, res, next) => {
                 if (err) {
                     throw new Error(err);
                 }
-                req.flash(
-                    "succes",
-                    records + " records were succesfully added to the database."
-                );
-                res.redirect("/add-from-file");
             });
+            req.flash(
+                "succes",
+                records + " records were succesfully added to the database."
+            );
+            res.redirect("/add-from-file");
         } else if (extension === "json") {
             const data = await fs.readFile(
                 path.join(__dirname, "..", "files", "data.json")
@@ -262,6 +261,44 @@ exports.postAddFromFile = async(req, res, next) => {
             );
             res.redirect("/add-from-file");
         }
+    } catch (err) {
+        const error = new Error(err);
+        error.httpStatusCode = 500;
+        next(error);
+    }
+};
+
+exports.postNewArticle = async(req, res, next) => {
+    const errors = validationResult(req);
+    console.log(errors);
+    if (!errors.isEmpty()) {
+        const errorMessage = errors.array()[0].msg;
+        return res.render("articles/new-article", {
+            pageTitle: "Add record",
+            oldValue: {
+                title: req.body.title,
+                type: req.body.type,
+                author: req.body.author,
+                description: req.body.descriprion,
+            },
+            errorMessage: errorMessage,
+            succesMessage: "",
+        });
+    }
+    const article = new Article({
+        title: req.body.title,
+        typeOfArticle: req.body.type,
+        author: req.body.author,
+        description: req.body.description,
+    });
+    try {
+        await article.save();
+        return res.render("articles/new-article", {
+            pageTitle: "Add record",
+            oldValue: {},
+            errorMessage: "",
+            succesMessage: "One article succesfully added to the database!",
+        });
     } catch (err) {
         const error = new Error(err);
         error.httpStatusCode = 500;

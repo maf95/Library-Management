@@ -31,7 +31,7 @@
                 </div>
                 <div class="menu">
                     <ul>
-                        <li><a href="/librarian">Home</a></li>
+                        <li><a href="/library">Back</a></li>
 
                         <li><a href="/">Logout</a></li>
 
@@ -40,26 +40,33 @@
             </nav>
         </header>
         <div class="header">
-            <div>Add<span>new article</span></div>
+            <div style="font-weight: bolder;">Add<span>new article</span></div>
         </div>
         <br>
         <div class="login">
-            <input type="text" placeholder="title" name="title"><br>
-            <input type="text" placeholder="type" name="type"><br>
-            <input type="text" placeholder="author" name="author"><br>
 
-            <label for="description">Description</label><br>
-            <textarea name="description" id="" cols="28" rows="5"></textarea>
-            <form action="/admin" method="GET">
-                <input type="hidden" name="_csrf" value="<%=csrfToken%>">
-                <button class="btn1" type="submit">Add article</button>
-            </form>
-        </div>
-        <div class="content">
-            <p>
-            </p>
+            <% if(errorMessage!=='') { %>
+                <div style="color: red; font-size: 20px;">
+                    <%=errorMessage%>
+                </div>
+                <% } %>
+                    <% if(succesMessage!=='') { %>
+                        <div style="color: rgb(38, 0, 255); font-size: 20px;">
+                            <%=succesMessage%>
+                        </div>
+                        <% } %>
+                            <form action="/new-article" method="POST">
+                                <input type="text" placeholder="title" name="title" value="<%=oldValue.title%>"><br>
+                                <input type="text" placeholder="type" name="type" value="<%=oldValue.type%>"><br>
+                                <input type="text" placeholder="author" name="author" value="<%=oldValue.author%>"><br>
+                                <label for="description">Description</label><br>
+                                <textarea name="description" id="" cols="28" rows="5" value="<%=oldValue.description%>"></textarea>
 
+                                <input type="hidden" name="_csrf" value="<%=csrfToken%>">
+                                <button class="btn1" type="submit">Add article</button>
+                            </form>
         </div>
+
     </div>
 </body>
 <script>

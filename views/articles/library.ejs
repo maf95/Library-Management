@@ -14,6 +14,8 @@
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
     <link rel="stylesheet" href="/css/style.css">
     <link rel="stylesheet" href="/css/main.css">
+    <link rel="stylesheet" href="/css/pagination.css">
+    <link rel="stylesheet" href="/css/search.css">
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
@@ -31,7 +33,7 @@
             </div>
             <div class="menu">
                 <ul>
-                    <li><a href="/add-article">Add article</a></li>
+                    <li><a href="/new-article">Add article</a></li>
                     <li><a href="/add-from-file">Add articles from file</a></li>
                     <li><a href="/add-article">Manage articles</a></li>
                     <li><a href="/librarian">Back</a></li>
@@ -39,15 +41,36 @@
             </div>
         </nav>
     </header>
-    <div class="library">
+    <div class="list-title">
+        <div>Articles<span>List</span></div>
+        <div class="search-container">
+            <form action="/library" method="GET">
+                <input type="text" name="searchTitle" placeholder="Search library by title...">
+                <button class="btn-search" type="submit">Search</button>
+            </form>
+            <form action="/library" method="GET">
+                <input type="text" name="searchAuthor" placeholder="Search library by author...">
+                <button class="btn-search" type="submit">Search</button>
+            </form>
+        </div>
+    </div>
+    <div class="list-container">
+        <% articles.forEach(article =>{ %>
+            <div id="elem-<%=article._id%>" class="user-element">
+                Title: <span><%=article.title%></span> Author: <span><%=article.author%></span> Type: <span><%=article.typeOfArticle%></span> state: <span id="spn-<%=article._id%>"><%=article.isAvailable ? 'available' :'unavailable'%></span>
+                <div style="position: relative; top: -40px;">
 
-        <% if(succesMessage!=='') { %>
-            <div style="color: rgb(17, 0, 255); font-size: 20px;">
-                <%=succesMessage%>
+                    <form action="/edit-article/<%=article._id%>" method="POST">
+                        <input type="hidden" name="_csrf" value="<%=csrfToken%>">
+                        <button class="btn">DETAILS</button>
+                    </form>
+                </div>
+
             </div>
-            <% } %>
+            <% }) %>
 
     </div>
+    <%-include('../includes/pagination.ejs')%>
 </body>
 <script>
     $(document).ready(function() {

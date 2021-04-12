@@ -3,6 +3,7 @@ const bcrypt = require("bcryptjs");
 const session = require("express-session");
 const mongoose = require("mongoose");
 const User = require("../models/user");
+const Article = require("../models/article");
 const { validationResult } = require("express-validator");
 const io = require("../socket");
 
@@ -135,19 +136,97 @@ exports.getManageUsers = async(req, res, next) => {
     });
 };
 
-exports.getLibrary = (req, res, next) => {
-    const succes = req.flash("succes") || "";
+exports.getLibrary = async(req, res, next) => {
+    try {
+        if (!req.query.searchTitle && !req.query.searchAuthor) {
+            const page = +req.query.page || 1;
+            const totalArticles = await Article.find().countDocuments();
+            const articles = await Article.find()
+                .skip((page - 1) * 5)
+                .limit(5);
+            const userId = req.session.user._id;
 
-    res.render("articles/library", {
-        pageTitle: "Library",
-        succesMessage: succes,
-    });
+            res.render("articles/library", {
+                pageTitle: "Library",
+                articles: articles,
+
+                hasPrevious: page > 1,
+                hasNext: page < Math.ceil(totalArticles / 5),
+                page: page,
+                nextPage: page + 1,
+                previousPage: page - 1,
+                totalPage: Math.ceil(totalArticles / 5),
+            });
+        }
+        if (req.query.searchTitle) {
+            const regex = new RegExp(escapeRegex(req.query.searchTitle), "gi");
+            const page = +req.query.page || 1;
+            const totalArticles = await Article.find({
+                title: regex,
+            }).countDocuments();
+            const articles = await Article.find({ title: regex })
+                .skip((page - 1) * 5)
+                .limit(5);
+            const userId = req.session.user._id;
+
+            res.render("articles/library", {
+                pageTitle: "Library",
+                articles: articles,
+
+                hasPrevious: page > 1,
+                hasNext: page < Math.ceil(totalArticles / 5),
+                page: page,
+                nextPage: page + 1,
+                previousPage: page - 1,
+                totalPage: Math.ceil(totalArticles / 5),
+            });
+        } else if (req.query.searchAuthor) {
+            const regex = new RegExp(escapeRegex(req.query.searchAuthor), "gi");
+            const page = +req.query.page || 1;
+            const totalArticles = await Article.find({
+                author: regex,
+            }).countDocuments();
+            const articles = await Article.find({ author: regex })
+                .skip((page - 1) * 5)
+                .limit(5);
+            const userId = req.session.user._id;
+
+            res.render("articles/library", {
+                pageTitle: "Library",
+                articles: articles,
+
+                hasPrevious: page > 1,
+                hasNext: page < Math.ceil(totalArticles / 5),
+                page: page,
+                nextPage: page + 1,
+                previousPage: page - 1,
+                totalPage: Math.ceil(totalArticles / 5),
+            });
+        }
+    } catch (err) {
+        const error = new Error(err);
+        error.httpStatusCode = 500;
+        next(error);
+    }
 };
+
+function escapeRegex(text) {
+    return text.replace(/[-[\]{}()*+?.,\\^$|#\s]/g, "\\$&");
+}
 
 exports.getAddFromFile = (req, res, next) => {
     const succes = req.flash("succes") || "";
     res.render("articles/add-from-file", {
         pageTitle: "Add from file",
         succesMessage: succes,
+    });
+};
+
+exports.getNewArticle = (req, res, next) => {
+    res.render("articles/new-article", {
+        pageTitle: "Add record",
+        oldValue: {},
+        errorMessage: "",
+        succesMessage: "",
     });
 };

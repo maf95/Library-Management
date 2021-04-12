@@ -1,0 +1,35 @@
+.article-container {
+    position: absolute;
+    top: 150px;
+    left: 400px;
+    max-width: 50%;
+}
+
+.article-container h1 {
+    font-size: 3rem;
+    text-align: center;
+}
+
+.article-container span {
+    color: #5379fa !important;
+    float: right;
+    font-size: 2rem;
+}
+
+.article-container p {
+    font-size: 1.3rem;
+    text-align: justify;
+}
+
+.article-container h3 {
+    color: #5379fa !important;
+    font-size: 2rem;
+    text-align: center;
+}
+
+.article-buttons {
+    display: grid;
+    margin-top: 40px;
+    grid-template-columns: 1fr 1fr 1fr;
+    grid-column-gap: 20px;
+}

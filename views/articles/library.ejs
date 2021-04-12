@@ -35,7 +35,7 @@
                 <ul>
                     <li><a href="/new-article">Add article</a></li>
                     <li><a href="/add-from-file">Add articles from file</a></li>
-                    <li><a href="/add-article">Manage articles</a></li>
+
                     <li><a href="/librarian">Back</a></li>
                 </ul>
             </div>
@@ -60,8 +60,8 @@
                 Title: <span><%=article.title%></span> Author: <span><%=article.author%></span> Type: <span><%=article.typeOfArticle%></span> state: <span id="spn-<%=article._id%>"><%=article.isAvailable ? 'available' :'unavailable'%></span>
                 <div style="position: relative; top: -40px;">
 
-                    <form action="/edit-article/<%=article._id%>" method="POST">
-                        <input type="hidden" name="_csrf" value="<%=csrfToken%>">
+                    <form action="/article/<%=article._id%>" method="GET">
+
                         <button class="btn">DETAILS</button>
                     </form>
                 </div>

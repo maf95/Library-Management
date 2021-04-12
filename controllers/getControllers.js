@@ -230,3 +230,21 @@ exports.getNewArticle = (req, res, next) => {
         succesMessage: "",
     });
 };
+
+exports.getArticle = async(req, res, next) => {
+    const articleId = req.params.articleId;
+    try {
+        const article = await Article.findOne({ _id: articleId });
+        if (!article) {
+            return res.redirect("/library");
+        }
+        res.render("articles/article", {
+            pageTitle: "Article's details",
+            article: article,
+        });
+    } catch (err) {
+        const error = new Error(err);
+        error.httpStatusCode = 500;
+        next(error);
+    }
+};

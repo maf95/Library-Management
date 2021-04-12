@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>
+        <%=pageTitle%>
+    </title>
+    <link href="//maxcdn.bootstrapcdn.com/bootstrap/4.1.1/css/bootstrap.min.css" rel="stylesheet" id="bootstrap-css">
+    <script src="//maxcdn.bootstrapcdn.com/bootstrap/4.1.1/js/bootstrap.min.js"></script>
+    <script src="//cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+    <link rel="stylesheet" href="/css/style.css">
+    <link rel="stylesheet" href="/css/new-article.css">
+    <link rel="stylesheet" href="/css/main.css">
+    <link rel="stylesheet" href="/css/article.css">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
+    <script src="https://code.jquery.com/jquery-3.3.1.js"></script>
+
+</head>
+
+<body>
+    <div class="wrapper">
+        <header>
+            <nav class="top">
+                <div class="menu-icon">
+                    <i class="fa fa-bars fa-2x"></i>
+                </div>
+                <div class="logo">
+                    UNIVERSITY LIBRARY
+                </div>
+                <div class="menu">
+                    <ul>
+                        <li><a href="/library">Back</a></li>
+                    </ul>
+                </div>
+            </nav>
+        </header>
+        <div class="article-container">
+            <div>
+                <h1>
+                    <%=article.title%>
+                </h1><br><span>by <%=article.author%></span><br><br><br><br>
+                <p>
+                    "
+                    <%=article.description%>"
+                </p>
+                <% if(article.isAvailable) { %>
+                    <h3>This
+                        <%=article.typeOfArticle%> is available</h3>
+                    <% } else if(article.isStolen) { %>
+                        <h3 style="color: red;">This
+                            <%=article.typeOfArticle%> is not available because it was stolen.</h3>
+                        <% } else if(article.isDistroyed) { %>
+                            <h3 style="color: red;">This
+                                <%=article.typeOfArticle%> is not available because it was distroyed.</h3>
+                            <% } else { %>
+                                <h3 style="color: red;">This
+                                    <%=article.typeOfArticle%> is not available because it is lent.</h3>
+                                <% } %>
+            </div>
+            <div class="article-buttons">
+                <form action="/edit-article/<%=article._id%>" method="GET">
+                    <button class="btn">
+                    Edit article
+                </button></form>
+                <form action="/lend-article/<%=article._id%>" method="GET">
+                    <button class="btn">
+                        Lend article
+                    </button></form>
+                <form action="/return-article/<%=article._id%>" method="GET">
+                    <button class="btn">
+                            Return article
+                        </button></form>
+            </div>
+        </div>
+        <br>
+
+    </div>
+</body>
+<script>
+    $(document).ready(function() {
+        $(".menu-icon").on("click", function() {
+            $("nav ul").toggleClass("showing");
+        });
+    });
+
+    // Scrolling Effect
+
+    $(window).on("scroll", function() {
+        if ($(window).scrollTop()) {
+            $('nav').addClass('black');
+        } else {
+            $('nav').removeClass('black');
+        }
+    })
+</script>
+
+
+</html>

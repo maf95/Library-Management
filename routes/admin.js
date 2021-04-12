@@ -69,8 +69,6 @@ router.post(
     adminController.postNewUser
 );
 
-router.get("/new-article", getControllers.getNewArticle);
-
 router.get(
     "/update-user/:userId",
     routeProtection.isCorrectUser,
@@ -128,13 +126,25 @@ router.get(
 
 router.post("/delete-user/:userId", postControllers.postDeleteUser);
 
-router.get("/library", getControllers.getLibrary);
+router.get("/library", routeProtection.isLibrarian, getControllers.getLibrary);
 
-router.post("/add-from-file", postControllers.postAddFromFile);
+router.post(
+    "/add-from-file",
+    routeProtection.isLibrarian,
+    postControllers.postAddFromFile
+);
 
-router.get("/add-from-file", getControllers.getAddFromFile);
+router.get(
+    "/add-from-file",
+    routeProtection.isLibrarian,
+    getControllers.getAddFromFile
+);
 
-router.get("/new-article", getControllers.getNewArticle);
+router.get(
+    "/new-article",
+    routeProtection.isLibrarian,
+    getControllers.getNewArticle
+);
 
 router.post(
     "/new-article", [
@@ -153,5 +163,7 @@ router.post(
     ],
     postControllers.postNewArticle
 );
+
+router.get("/article/:articleId", getControllers.getArticle);
 
 module.exports = router;

@@ -248,3 +248,23 @@ exports.getArticle = async(req, res, next) => {
         next(error);
     }
 };
+
+exports.getEditArticle = async(req, res, next) => {
+    const articleId = req.params.articleId;
+    try {
+        const article = await Article.findOne({ _id: articleId });
+        if (!article) {
+            return res.redirect("/library");
+        }
+        return res.render("articles/edit-article", {
+            pageTitle: "Edit article",
+            article: article,
+            errorMessage: "",
+            succesMessage: "",
+        });
+    } catch (err) {
+        const error = new Error(err);
+        error.httpStatusCode = 500;
+        next(error);
+    }
+};

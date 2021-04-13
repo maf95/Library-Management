@@ -166,4 +166,6 @@ router.post(
 
 router.get("/article/:articleId", getControllers.getArticle);
 
+router.get("/edit-article/:articleId", getControllers.getEditArticle);
+
 module.exports = router;

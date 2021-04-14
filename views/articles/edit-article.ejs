@@ -52,23 +52,23 @@
                             <%=succesMessage%>
                         </div>
                         <% } %>
-                            <form action="/edit-article" method="POST">
+                            <form action="/edit-article/<%=article._id%>" method="POST">
                                 <input style="width: 500px;" type="text" placeholder="title" name="title" value="<%=article.title%>"><br>
                                 <input style="width: 500px;" type="text" placeholder="type" name="type" value="<%=article.typeOfArticle%>"><br>
                                 <input style="width: 500px;" type="text" placeholder="author" name="author" value="<%=article.author%>"><br>
                                 <label for="description">Description</label><br>
                                 <textarea name="description" id="" cols="60" rows="5"><%=article.description%></textarea><br>
                                 <label for="check-stolen">Stolen</label>
-                                <input type="radio" id="check-stolen" name="position" <%=article.isStolen ? 'checked': ''%>
+                                <input type="radio" id="check-stolen" name="position" value='isStolen' <%=article.isStolen ? 'checked': ''%>
                                 <%=!article.isAvailable&&!article.isStolen&&!article.isDistroyed ? 'disabled': ''%>>
                                     <label style="margin-left: 50px;" for="check-distroyed">Distroyed</label>
-                                    <input type="radio" id="check-distroyed" name="position" <%=article.isDistroyed ? 'checked': ''%>
+                                    <input type="radio" id="check-distroyed" name="position" value="isDistroyed" <%=article.isDistroyed ? 'checked': ''%>
                                     <%=!article.isAvailable&&!article.isStolen&&!article.isDistroyed ? 'disabled': ''%>>
                                         <label style="margin-left: 50px;" for="check-available">Available</label>
-                                        <input type="radio" id="check-available" name="position" <%=article.isAvailable ? 'checked': ''%>
+                                        <input type="radio" id="check-available" name="position" value="isAvailable" <%=article.isAvailable ? 'checked': ''%>
                                         <%=!article.isAvailable&&!article.isStolen&&!article.isDistroyed ? 'disabled': ''%>>
                                             <label style="margin-left: 50px;" for="check-lent">Lent</label>
-                                            <input type="radio" id="check-lent" name="position" <%=!article.isAvailable&&!article.isStolen&&!article.isDistroyed ? 'checked': ''%> disabled><br>
+                                            <input type="radio" id="check-lent" value="isLent" name="position" <%=!article.isAvailable&&!article.isStolen&&!article.isDistroyed ? 'checked': ''%> disabled><br>
 
                                             <input type="hidden" name="_csrf" value="<%=csrfToken%>">
                                             <button style="margin-left: 120px;" class="btn1" type="submit">Update article</button>

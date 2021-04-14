@@ -188,6 +188,10 @@ body {
     opacity: 0.8;
 }
 
+.btn:disabled {
+    cursor: not-allowed;
+}
+
 .btn:active {
     opacity: 0.6;
 }

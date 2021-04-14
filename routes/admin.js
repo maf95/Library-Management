@@ -168,4 +168,22 @@ router.get("/article/:articleId", getControllers.getArticle);
 
 router.get("/edit-article/:articleId", getControllers.getEditArticle);
 
+router.post(
+    "/edit-article/:articleId", [
+        check("title")
+        .isLength({ min: 1 })
+        .withMessage("Article should have a title."),
+        check("type")
+        .isLength({ min: 1 })
+        .withMessage("Article should have a type."),
+        check("author")
+        .isLength({ min: 1 })
+        .withMessage("Article should have an author."),
+        check("description")
+        .isLength({ min: 1 })
+        .withMessage("Article should have a description."),
+    ],
+    postControllers.postEditArticle
+);
+
 module.exports = router;

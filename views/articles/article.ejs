@@ -66,11 +66,11 @@
                     Edit article
                 </button></form>
                 <form action="/lend-article/<%=article._id%>" method="GET">
-                    <button class="btn">
+                    <button class="btn" <%=!article.isAvailable ? 'disabled': ''%>>
                         Lend article
                     </button></form>
                 <form action="/return-article/<%=article._id%>" method="GET">
-                    <button class="btn">
+                    <button class="btn" <%=article.isStolen||article.isDistroyed||article.isAvailable ? 'disabled' : ''%>>
                             Return article
                         </button></form>
             </div>

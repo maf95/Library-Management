@@ -305,3 +305,56 @@ exports.postNewArticle = async(req, res, next) => {
         next(error);
     }
 };
+
+exports.postEditArticle = async(req, res, next) => {
+    try {
+        const state = req.body.position;
+        const articleId = req.params.articleId;
+        const title = req.body.title;
+        const author = req.body.author;
+        const description = req.body.description;
+        const typeOfArticle = req.body.type;
+        const isAvailable = state === "isAvailable" ? true : false;
+        const isStolen = state === "isStolen" ? true : false;
+        const isDistroyed = state === "isDistroyed" ? true : false;
+        let article = new Article({
+            title: title,
+            typeOfArticle: typeOfArticle,
+            author: author,
+            description: description,
+            isAvailable: isAvailable,
+            isStolen: isStolen,
+            isDistroyed: isDistroyed,
+        });
+        const errors = validationResult(req);
+        if (!errors.isEmpty()) {
+            return res.render("articles/edit-article", {
+                pageTitle: "Edit article",
+                article: article,
+                errorMessage: errors.array()[0].msg,
+                succesMessage: "",
+            });
+        }
+        article = await Article.findOneAndUpdate({ _id: articleId }, {
+            title: title,
+            typeOfArticle: typeOfArticle,
+            author: author,
+            description: description,
+            isAvailable: isAvailable,
+            isStolen: isStolen,
+            isDistroyed: isDistroyed,
+        }, { new: true });
+        io.getIo().emit("updatedArticle", {
+            message: "Article updated",
+            article: article,
+        });
+        return res.render("articles/article", {
+            pageTitle: "Article's details",
+            article: article,
+        });
+    } catch (err) {
+        const error = new Error(err);
+        error.httpStatusCode = 500;
+        next(error);
+    }
+};

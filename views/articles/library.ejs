@@ -71,6 +71,21 @@
 
     </div>
     <%-include('../includes/pagination.ejs')%>
+        <script src="/socket.io/socket.io.js"></script>
+        <script>
+            var socket = io();
+            socket.on('updatedArticle', data => {
+                const id = '#elem-' + data.article._id;
+                $(`${id} span:eq(0)`).html(data.article.title);
+                $(`${id} span:eq(1)`).html(data.article.author);
+                $(`${id} span:eq(2)`).html(data.article.typeOfArticle);
+                const id1 = '#spn-' + data.article._id;
+                const state = data.article.isAvailable ? 'available' : 'unavailable'
+                $(id1).html(state)
+
+
+            })
+        </script>
 </body>
 <script>
     $(document).ready(function() {
